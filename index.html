@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesa Foundation | Premium Sport-Tech</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+    <nav class="navbar">
+        <div class="logo">SESA <span class="accent">FOUNDATION</span></div>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#dojo">The Dojo</a></li>
+            <li><a href="#marathon">Marathon Hub</a></li>
+        </ul>
+        <a href="#join" class="btn-primary">Join Now</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" style="height: 60vh; padding: 0; margin-top: 80px;">
+        <div class="train-container">
+            <div class="train-track">
+                <div class="train-car" style="background-image: url('custom_slide.png');"></div>
+                <div class="train-car" style="background-image: url('custom_slide_2.jpg');"></div>
+                <div class="train-car" style="background-image: url('custom_slide_3.jpg');"></div>
+                <div class="train-car" style="background-image: url('custom_slide_new_4.jpg');"></div>
+                <!-- Duplicate for seamless loop -->
+                <div class="train-car" style="background-image: url('custom_slide.png');"></div>
+                <div class="train-car" style="background-image: url('custom_slide_2.jpg');"></div>
+                <div class="train-car" style="background-image: url('custom_slide_3.jpg');"></div>
+                <div class="train-car" style="background-image: url('custom_slide_new_4.jpg');"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Dojo Showcase -->
+    <section id="dojo">
+        <h2 class="section-title">THE DOJO SHOWCASE</h2>
+        <div class="dojo-grid">
+            <div class="dojo-card glass-card">
+                <div class="card-img" style="background-image: url('taekwondo_beginner.png');"></div>
+                <div class="card-content">
+                    <h3>Beginner Curriculum</h3>
+                    <p>Master the foundational stances, blocks, and forms (Poomsae).</p>
+                </div>
+            </div>
+            <div class="dojo-card glass-card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2000&auto=format&fit=crop');"></div>
+                <div class="card-content">
+                    <h3>Advanced Sparring</h3>
+                    <p>Olympic-style contact training and modern defensive tactics.</p>
+                </div>
+            </div>
+            <div class="dojo-card glass-card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=2069&auto=format&fit=crop');"></div>
+                <div class="card-content">
+                    <h3>Leadership Program</h3>
+                    <p>Success stories and elite black belt mentorship opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marathon Hub -->
+    <section id="marathon">
+        <div class="marathon-bg parallax"></div>
+        <div class="marathon-container">
+            <div class="glass-card countdown-card">
+                <h2>NEXT RACE STARTING IN</h2>
+                <div class="timer">
+                    <div class="time-block"><span id="days">00</span><small>Days</small></div>
+                    <div class="time-block"><span id="hours">00</span><small>Hours</small></div>
+                    <div class="time-block"><span id="mins">00</span><small>Mins</small></div>
+                    <div class="time-block"><span id="secs">00</span><small>Secs</small></div>
+                </div>
+            </div>
+            
+            <div class="glass-card register-card">
+                <h3>Sesa Cup Marathon 2026</h3>
+                <p>Register today and secure your starting position.</p>
+                <button class="btn-primary" style="width: 100%;">Register Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lead Generation Form -->
+    <section id="join">
+        <div class="glass-card join-card sticky-form">
+            <h2>JOIN THE <span class="accent">FOUNDATION</span></h2>
+            <form id="contact-form">
+                <div class="input-group">
+                    <input type="text" id="name" required placeholder="Full Name">
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" required placeholder="Email Address">
+                </div>
+                <div class="input-group">
+                    <select id="interest" required>
+                        <option value="" disabled selected>Primary Interest</option>
+                        <option value="taekwondo">Taekwondo</option>
+                        <option value="marathon">Athletics / Marathon</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Begin Journey</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Sesa Foundation. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
