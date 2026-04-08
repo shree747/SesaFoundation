@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Profile — Sesa Foundation</title>
+    <meta name="description" content="View your marathon registrations, tickets, and runner profile."/>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css"/>
+
+    <style>
+        :root {
+            --bg: #0d0d0f; --card: rgba(26,26,36,0.9); --card-hover: rgba(36,36,46,0.95);
+            --crimson: #ff003c; --gold: #ffd700; --emerald: #00e676;
+            --text: #f0f0f5; --muted: #888899; --dim: #44445a;
+            --border: rgba(255,255,255,0.08); --glass: rgba(255,255,255,0.03);
+        }
+        body { background: var(--bg); color: var(--text); padding-top: 100px; min-height: 100vh; overflow-x: hidden; }
+
+        /* Background FX */
+        .bg-glow {
+            position: fixed; inset: 0; pointer-events: none; z-index: -1;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,0,60,0.12) 0%, transparent 60%);
+        }
+
+        .profile-container {
+            max-width: 1100px; margin: 0 auto; padding: 0 5%; display: grid;
+            grid-template-columns: 320px 1fr; gap: 2rem; align-items: start;
+        }
+
+        /* ── LEFT PANEL (USER INFO) ── */
+        .user-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 24px;
+            padding: 2.5rem 1.5rem; text-align: center; backdrop-filter: blur(20px);
+            position: relative; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+        .user-card::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background: linear-gradient(90deg, var(--crimson), var(--gold));
+        }
+
+        .user-avatar-lg {
+            width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 1.2rem;
+            background: linear-gradient(135deg, rgba(255,0,60,0.2), rgba(255,215,0,0.2));
+            border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center;
+            justify-content: center; font-size: 2.5rem; font-weight: 800; font-family: 'Outfit';
+            color: #fff; text-shadow: 0 4px 12px rgba(255,0,60,0.4);
+        }
+        .user-name { font-size: 1.6rem; font-weight: 800; font-family: 'Outfit'; margin-bottom: 0.3rem; }
+        .user-email { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; word-break: break-all; }
+
+        .runner-level {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.5rem 1rem; background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: var(--gold);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 2rem;}
+        .stat-box {
+            background: var(--glass); border: 1px solid var(--border); border-radius: 12px;
+            padding: 1rem 0.5rem;
+        }
+        .stat-val { font-size: 1.6rem; font-weight: 800; font-family: 'Outfit'; margin-bottom: 0.2rem; color: #fff;}
+        .stat-lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        .btn-logout {
+            width: 100%; padding: 0.8rem; background: transparent; border: 1px solid rgba(255,0,60,0.4);
+            border-radius: 10px; color: var(--crimson); font-family: 'Outfit'; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255,0,60,0.1); border-color: var(--crimson); }
+
+
+        /* ── RIGHT PANEL (CONTENT) ── */
+        .content-panel { display: flex; flex-direction: column; gap: 2rem; }
+
+        .section-header {
+            font-family: 'Outfit'; font-size: 1.5rem; font-weight: 800; margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+        .section-header span { color: var(--crimson); }
+
+        /* Emtpy State */
+        .empty-state {
+            background: var(--card); border: 1px dashed rgba(255,255,255,0.15); border-radius: 16px;
+            padding: 4rem 2rem; text-align: center; color: var(--muted);
+        }
+        .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+        .empty-state h3 { font-size: 1.4rem; color: #fff; margin-bottom: 0.5rem; font-family: 'Outfit'; }
+
+        /* Registration Tickets */
+        .tickets-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        
+        .ticket {
+            display: flex; background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s;
+            position: relative;
+        }
+        .ticket:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.15); }
+        
+        .ticket-stub {
+            background: linear-gradient(135deg, #1e1e2d, #14141e); border-right: 2px dashed rgba(255,255,255,0.1);
+            padding: 1.5rem; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            min-width: 140px; text-align: center;
+        }
+        .qr-placeholder {
+            width: 70px; height: 70px; background: #fff; border-radius: 8px; margin-bottom: 0.8rem;
+            display: flex; flex-wrap: wrap; padding: 4px; gap: 2px;
+        }
+        /* Fake QR code generation */
+        .qr-dot { width: 12px; height: 12px; background: #000; border-radius: 2px; }
+        
+        .ticket-stub .t-id { font-family: monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 1px;}
+        
+        .ticket-main { padding: 1.5rem; flex: 1; }
+        .ticket-title { font-family: 'Outfit'; font-size: 1.3rem; font-weight: 800; margin-bottom: 0.4rem; }
+        .ticket-meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.2rem; }
+        .ticket-meta span { margin-right: 1rem; display: inline-flex; align-items: center; gap: 0.3rem;}
+
+        .ticket-details { display: flex; gap: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; }
+        .td-item { display: flex; flex-direction: column; gap: 0.2rem; }
+        .td-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--dim); }
+        .td-val { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+
+        .status-badge {
+            position: absolute; top: 1.2rem; right: 1.2rem;
+            padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.7rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .status-badge.confirmed { background: rgba(0,230,118,0.1); color: var(--emerald); border: 1px solid rgba(0,230,118,0.3); }
+        .status-badge.pending { background: rgba(255,215,0,0.1); color: var(--gold); border: 1px solid rgba(255,215,0,0.3); }
+        .status-badge.cancelled { background: rgba(255,0,60,0.1); color: var(--crimson); border: 1px solid rgba(255,0,60,0.3); }
+
+        /* Loading */
+        #loader { text-align: center; padding: 4rem 0; width: 100%; grid-column: 1 / -1;}
+        .spinner {
+            width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--crimson);
+            border-radius: 50%; animation: sp 0.8s linear infinite; margin: 0 auto 1rem;
+        }
+        @keyframes sp { to { transform: rotate(360deg); } }
+
+        @media (max-width: 900px) {
+            .profile-container { grid-template-columns: 1fr; }
+            .user-card { margin-bottom: 2rem; }
+        }
+        @media (max-width: 600px) {
+            .ticket { flex-direction: column; }
+            .ticket-stub { border-right: none; border-bottom: 2px dashed rgba(255,255,255,0.1); flex-direction: row; justify-content: space-between; padding: 1rem 1.5rem; }
+            .qr-placeholder { margin-bottom: 0; width: 40px; height: 40px; padding: 2px; }
+            .qr-dot { width: 6px; height: 6px; }
+            .ticket-details { flex-wrap: wrap; }
+            .status-badge { top: auto; bottom: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <!-- Minimal Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">SESA <span class="accent">FOUNDATION</span></a>
+        <div class="nav-right">
+            <a href="index.html" class="btn-nav home">← Home</a>
+            <a href="index.html#marathon" class="btn-nav home" style="margin-left: 10px; background: rgba(255,0,60,0.1); color: var(--crimson)">Find Events</a>
+        </div>
+    </nav>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <div style="color:var(--muted); font-size: 0.9rem;">Loading your profile...</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-container" id="profile-wrap" style="display: none;">
+        
+        <!-- LEFT: User Card -->
+        <aside>
+            <div class="user-card">
+                <div class="user-avatar-lg" id="up-avatar">U</div>
+                <h1 class="user-name" style="display:flex; justify-content:center; align-items:center; gap:0.5rem">
+                    <span id="up-name-txt">Loading...</span>
+                    <input type="text" id="edit-name-inp" style="display:none; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:0.3rem 0.6rem; border-radius:6px; font-family:'Outfit'; font-size:1.4rem; font-weight:800; max-width: 180px;"/>
+                    <button id="edit-btn" onclick="toggleEditProfile()" style="background:transparent; border:none; cursor:pointer; filter:grayscale(1) brightness(2); width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:5px">✏️</button>
+                </h1>
+                <p class="user-email" id="up-email">loading@...com</p>
+                
+                <div class="runner-level" id="up-level">
+                    ⭐ Intermediate Runner
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-val" id="stat-races">0</div>
+                        <div class="stat-lbl">Races</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val" id="stat-dist">0K</div>
+                        <div class="stat-lbl">Distance</div>
+                    </div>
+                </div>
+
+                <button class="btn-logout" onclick="signOut()">Log Out</button>
+            </div>
+        </aside>
+
+        <!-- RIGHT: Registrations -->
+        <main class="content-panel">
+            <div class="section-header"><span>🏆</span> My Event Tickets</div>
+            <p style="color:var(--muted); margin-top:-1.2rem; margin-bottom:1rem; font-size:0.9rem;">
+                Present these passes or your phone number on race day at the bib collection counter.
+            </p>
+
+            <div id="tickets-container" class="tickets-grid">
+                <!-- Dynamically filled -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Supabase SDKs -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        let userAuth = null;
+
+        // On Load
+        onAuthStateChange(async (user) => {
+            if (!user) {
+                // Not logged in -> redirect to login
+                window.location.href = 'login.html?redirect=profile.html';
+                return;
+            }
+            userAuth = user;
+            
+            // Setup Profile Info
+            const name = user.displayName || user.email.split('@')[0];
+            document.getElementById('up-name-txt').textContent = name;
+            document.getElementById('up-email').textContent = user.email;
+            document.getElementById('up-avatar').textContent = name.charAt(0).toUpperCase();
+
+            await loadUserRegistrations(user.uid);
+            
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('profile-wrap').style.display = 'grid';
+        });
+
+        async function loadUserRegistrations(uid) {
+            const container = document.getElementById('tickets-container');
+            
+            try {
+                // Using the helper from supabase-config.js
+                const regs = await getUserRegistrations(uid);
+
+                if (regs.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="icon">🏃</div>
+                            <h3>No upcoming events</h3>
+                            <p>You haven't registered for any marathons yet.</p>
+                            <a href="index.html#marathon" style="color:var(--crimson); text-decoration:none; margin-top:1rem; display:inline-block; border-bottom:1px solid">Browse Events →</a>
+                        </div>`;
+                    return;
+                }
+
+                // Analyze stats
+                document.getElementById('stat-races').textContent = regs.length;
+                let totalDist = 0;
+                regs.forEach(r => {
+                    if (r.category && r.category.includes('5k')) totalDist += 5;
+                    else if (r.category && r.category.includes('10k')) totalDist += 10;
+                    else if (r.category && r.category.includes('half')) totalDist += 21;
+                    else if (r.category && r.category.includes('full')) totalDist += 42;
+                    else totalDist += 10; // avg estimate
+                });
+                document.getElementById('stat-dist').textContent = totalDist + 'K';
+
+                // Runner level logic
+                const rl = document.getElementById('up-level');
+                if (regs.length >= 5) { rl.innerHTML = '👑 Marathon Legend'; rl.style.color = '#ff6b35'; rl.style.borderColor = '#ff6b35'; }
+                else if (regs.length >= 3) { rl.innerHTML = '⚡ Elite Runner'; }
+                else if (regs.length === 1) { rl.innerHTML = '🌱 New Contender'; rl.style.color = '#00e676'; rl.style.borderColor = '#00e676';}
+
+                // Render Tickets
+                container.innerHTML = regs.map(r => {
+                    const d = new Date(r.submittedAt);
+                    const subDate = d.toLocaleDateString('en-IN', {month:'short', day:'numeric', year:'numeric'});
+                    
+                    // Simple fake QR pattern based on ID
+                    const qrDots = Array.from({length: 16}).map((_, i) => 
+                        `<div class="qr-dot" style="opacity: ${(r.id.charCodeAt(i % r.id.length) % 2) ? 1 : 0.1}"></div>`
+                    ).join('');
+
+                    return `
+                    <div class="ticket">
+                        <div class="status-badge ${r.status || 'pending'}">${r.status || 'pending'}</div>
+                        <div class="ticket-stub">
+                            <div class="qr-placeholder">${qrDots}</div>
+                            <div class="t-id">ID: ${r.id.split('-').pop().toUpperCase()}</div>
+                        </div>
+                        <div class="ticket-main">
+                            <div class="ticket-title">${r.marathonName || 'Sesa Event'}</div>
+                            <div class="ticket-meta">
+                                <span>📅 Registered: ${subDate}</span>
+                            </div>
+                            
+                            <div class="ticket-details">
+                                <div class="td-item">
+                                    <span class="td-lbl">Category</span>
+                                    <span class="td-val" style="text-transform: capitalize;">${(r.category || 'Standard').replace('-', ' ')}</span>
+                                </div>
+                                <div class="td-item">
+                                    <span class="td-lbl">T-Shirt Size</span>
+                                    <span class="td-val">${r.tshirt || 'M'}</span>
+                                </div>
+                                <div class="td-item">
+                                    <span class="td-lbl">Runner City</span>
+                                    <span class="td-val">${r.city || '—'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="empty-state">❌ Failed to load your registrations. Please refresh.</div>`;
+            }
+        }
+
+        async function signOut() {
+            try {
+                await signOutUser();
+                window.location.href = 'index.html';
+            } catch(e) {
+                alert('Failed to log out.');
+            }
+        }
+
+        async function toggleEditProfile() {
+            const isEditing = document.getElementById('edit-name-inp').style.display !== 'none';
+            if (isEditing) {
+                // Save changes
+                const newName = document.getElementById('edit-name-inp').value.trim();
+                if (!newName) return;
+
+                document.getElementById('edit-name-inp').style.display = 'none';
+                document.getElementById('up-name-txt').style.display = 'inline';
+                document.getElementById('up-name-txt').textContent = 'Saving...';
+                document.getElementById('edit-btn').textContent = '✏️';
+                
+                // Update Supabase Auth & Profile DB
+                await supabaseClient.auth.updateUser({ data: { full_name: newName } });
+                await supabaseClient.from('profiles').update({ name: newName }).eq('id', userAuth.uid);
+                
+                document.getElementById('up-name-txt').textContent = newName;
+                document.getElementById('up-avatar').textContent = newName.charAt(0).toUpperCase();
+            } else {
+                // Enter edit mode
+                document.getElementById('up-name-txt').style.display = 'none';
+                document.getElementById('edit-name-inp').style.display = 'inline';
+                document.getElementById('edit-btn').textContent = '💾';
+                document.getElementById('edit-name-inp').value = document.getElementById('up-name-txt').textContent;
+                document.getElementById('edit-name-inp').focus();
+            }
+        }
+    </script>
+</body>
+</html>

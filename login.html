@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login — Sesa Foundation</title>
+    <meta name="description" content="Sign in or create an account to register for Sesa Foundation marathon events."/>
+    <meta name="robots" content="noindex"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --bg: #0d0d0f;
+            --crimson: #ff003c;
+            --gold: #ffd700;
+            --emerald: #00e676;
+            --text: #f0f0f5;
+            --muted: #888899;
+            --dim: #44445a;
+            --glass: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.09);
+            --card: rgba(18,18,28,0.95);
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { height:100%; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        h1,h2,h3 { font-family: 'Outfit', sans-serif; }
+
+        /* ── BG LAYERS ── */
+        .bg-glow {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background:
+                radial-gradient(ellipse at 10% 60%, rgba(255,0,60,0.14) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 15%, rgba(255,215,0,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 85%, rgba(0,179,255,0.05) 0%, transparent 45%);
+        }
+        .bg-grid {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* ── LAYOUT ── */
+        .page-wrap {
+            position: relative; z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 480px;
+            gap: 5rem;
+            max-width: 1100px;
+            width: 100%;
+            align-items: center;
+        }
+
+        /* ── BRAND SIDE ── */
+        .brand-side { padding: 2rem 0; }
+        .brand-logo {
+            font-size: 1.4rem; font-weight: 900; letter-spacing: 3px;
+            margin-bottom: 2rem; display: flex; align-items: center; gap: 0.8rem;
+        }
+        .brand-logo .emblem {
+            width: 46px; height: 46px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--crimson), #ff6b35);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: 0 6px 20px rgba(255,0,60,0.4);
+        }
+        .brand-logo span { color: var(--crimson); }
+
+        .brand-tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem; font-weight: 800; line-height: 1.15;
+            margin-bottom: 1.2rem;
+        }
+        .brand-tagline .hl { color: var(--crimson); }
+
+        .brand-sub {
+            font-size: 1rem; color: var(--muted); line-height: 1.6; margin-bottom: 2.5rem;
+        }
+
+        .perks { display: flex; flex-direction: column; gap: 1rem; }
+        .perk {
+            display: flex; align-items: center; gap: 0.85rem;
+            font-size: 0.88rem; color: #ccc;
+        }
+        .perk-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--crimson), var(--gold));
+            flex-shrink: 0;
+        }
+
+        /* ── CARD ── */
+        .auth-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(24px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04) inset;
+            position: relative; overflow: hidden;
+            animation: cardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes cardIn {
+            from { opacity:0; transform: translateY(20px) scale(0.98); }
+            to   { opacity:1; transform: translateY(0) scale(1); }
+        }
+        .auth-card::before {
+            content: ''; position: absolute; top:0; left:0; right:0; height:2px;
+            background: linear-gradient(90deg, transparent, var(--crimson), var(--gold), transparent);
+        }
+
+        /* ── TABS ── */
+        .tab-bar {
+            display: flex; background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 4px; margin-bottom: 2rem; gap: 4px;
+        }
+        .tab-btn {
+            flex: 1; padding: 0.7rem;
+            background: transparent; border: none; border-radius: 9px;
+            color: var(--muted); font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem; font-weight: 600; cursor: pointer;
+            transition: all 0.25s; letter-spacing: 0.4px;
+        }
+        .tab-btn.active {
+            background: var(--crimson); color: #fff;
+            box-shadow: 0 4px 14px rgba(255,0,60,0.4);
+        }
+        .tab-btn:not(.active):hover { color: var(--text); }
+
+        /* ── PANELS ── */
+        .auth-panel { display: none; }
+        .auth-panel.active { display: block; }
+
+        /* ── FORM ── */
+        .form-group {
+            display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 1.1rem;
+        }
+        .form-group label {
+            font-size: 0.74rem; font-weight: 600; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.8px;
+        }
+        .form-group .input-wrap { position: relative; }
+        .form-group .input-wrap .iicon {
+            position: absolute; left: 0.9rem; top: 50%;
+            transform: translateY(-50%); color: var(--dim); font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border); border-radius: 10px;
+            color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem;
+            outline: none; transition: border-color 0.2s, background 0.2s;
+        }
+        .form-group input:focus {
+            border-color: var(--crimson); background: rgba(255,0,60,0.04);
+        }
+        .form-group input:focus ~ .iicon,
+        .form-group .input-wrap:focus-within .iicon { color: var(--crimson); }
+        .form-group input::placeholder { color: var(--dim); }
+
+        .input-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem;
+        }
+
+        .form-hint { font-size: 0.76rem; color: var(--muted); margin-top: 0.2rem; }
+        .form-err  { font-size: 0.78rem; color: var(--crimson); margin-top: 0.2rem; display:none; }
+        .form-err.show { display: block; }
+
+        /* ── SUBMIT BTN ── */
+        .btn-submit {
+            width: 100%; padding: 0.95rem;
+            background: var(--crimson); color: #fff; border: none; border-radius: 10px;
+            font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 700;
+            cursor: pointer; letter-spacing: 0.5px; margin-top: 0.5rem;
+            transition: all 0.25s ease; position: relative; overflow: hidden;
+        }
+        .btn-submit:hover {
+            background: #e0002f; box-shadow: 0 8px 24px rgba(255,0,60,0.45);
+            transform: translateY(-1px);
+        }
+        .btn-submit:active { transform: translateY(0); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* ── DIVIDER ── */
+        .divider {
+            display: flex; align-items: center; gap: 1rem; margin: 1.4rem 0;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+        .divider span { font-size: 0.76rem; color: var(--dim); white-space: nowrap; }
+
+        /* ── GOOGLE BTN ── */
+        .btn-google {
+            width: 100%; padding: 0.8rem; display: flex; align-items: center;
+            justify-content: center; gap: 0.7rem;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text);
+            font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 600;
+            cursor: pointer; transition: all 0.22s;
+        }
+        .btn-google:hover {
+            background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.2);
+        }
+        .g-logo { width: 18px; height: 18px; }
+
+        /* ── ALERT BANNER ── */
+        .alert {
+            padding: 0.75rem 1rem; border-radius: 9px; font-size: 0.84rem;
+            margin-bottom: 1rem; display: none; align-items: center; gap: 0.6rem;
+        }
+        .alert.show { display: flex; }
+        .alert.error   { background: rgba(255,0,60,0.1); border:1px solid rgba(255,0,60,0.3); color:#ff6685; }
+        .alert.success { background: rgba(0,230,118,0.1); border:1px solid rgba(0,230,118,0.3); color:#00e676; }
+
+        /* ── STRENGTH BAR ── */
+        .strength-bar {
+            height: 3px; border-radius: 2px; margin-top: 0.4rem;
+            background: var(--border); overflow: hidden;
+        }
+        .strength-fill {
+            height: 100%; border-radius: 2px; width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+        .strength-label { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            color: var(--muted); text-decoration: none; font-size: 0.84rem;
+            margin-bottom: 1.5rem; transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--crimson); }
+
+        /* ── FOOTER TEXT ── */
+        .auth-footer {
+            text-align: center; margin-top: 1.4rem;
+            font-size: 0.8rem; color: var(--muted);
+        }
+        .auth-footer a { color: var(--crimson); text-decoration: none; }
+        .auth-footer a:hover { text-decoration: underline; }
+
+        /* ── TOAST ── */
+        .toast-wrap {
+            position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9000;
+            display: flex; flex-direction: column; gap: 0.6rem; pointer-events: none;
+        }
+        .tx {
+            display: flex; align-items: center; gap: 0.6rem;
+            background: #1a1a28; border: 1px solid var(--border); border-radius: 10px;
+            padding: 0.75rem 1rem; font-size: 0.83rem; min-width: 240px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.4); pointer-events: auto;
+            animation: tin 0.32s ease both;
+        }
+        .tx.out { animation: tout 0.28s ease forwards; }
+        .tx.s { border-left: 3px solid #00e676; }
+        .tx.e { border-left: 3px solid var(--crimson); }
+        @keyframes tin  { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:none; } }
+        @keyframes tout { to   { opacity:0; transform:translateX(20px); } }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .page-wrap { grid-template-columns: 1fr; }
+            .brand-side { display: none; }
+        }
+        @media (max-width: 420px) {
+            .auth-card { padding: 1.8rem 1.4rem; border-radius: 18px; }
+            .input-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="bg-grid"></div>
+
+<div class="page-wrap">
+
+    <!-- Brand Side -->
+    <div class="brand-side">
+        <div class="brand-logo">
+            <div class="emblem">🏃</div>
+            SESA <span>FOUNDATION</span>
+        </div>
+        <div class="brand-tagline">
+            Run your <span class="hl">best race</span><br/>with the community.
+        </div>
+        <p class="brand-sub">
+            Join thousands of athletes across India. Register for upcoming marathons,
+            track your events, and be part of the Sesa movement.
+        </p>
+        <div class="perks">
+            <div class="perk"><div class="perk-dot"></div><span>Access to all published marathon events</span></div>
+            <div class="perk"><div class="perk-dot"></div><span>Track your registration status live</span></div>
+            <div class="perk"><div class="perk-dot"></div><span>Get race-day updates directly</span></div>
+            <div class="perk"><div class="perk-dot"></div><span>View your complete race history</span></div>
+        </div>
+    </div>
+
+    <!-- Auth Card -->
+    <div class="auth-card">
+        <a href="index.html" class="back-link">← Back to home</a>
+
+        <!-- Tabs -->
+        <div class="tab-bar">
+            <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+            <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Create Account</button>
+        </div>
+
+        <!-- ── LOGIN PANEL ── -->
+        <div class="auth-panel active" id="panel-login">
+            <div class="alert error" id="login-alert">
+                <span>⚠️</span><span id="login-alert-msg">Something went wrong.</span>
+            </div>
+
+            <button class="btn-google" id="google-login-btn" onclick="googleSignIn()">
+                <svg class="g-logo" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.6 32.6 29.2 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.3 2.7l5.7-5.7C33.5 6.9 29 5 24 5 12.9 5 4 13.9 4 25s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 13 24 13c2.8 0 5.3 1 7.3 2.7l5.7-5.7C33.5 6.9 29 5 24 5 16.3 5 9.7 9 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5 0 9.5-1.9 12.9-4.9l-6-5.1C29.2 36.6 26.7 37.5 24 37.5c-5.2 0-9.6-3.4-11.2-8l-6.6 5.1C9.5 40.8 16.3 45 24 45z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l.1-.1 6 5.1C36.9 39.3 44 34.5 44 25c0-1.3-.1-2.6-.4-3.9z"/></svg>
+                Continue with Google
+            </button>
+
+            <div class="divider"><span>or sign in with email</span></div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrap">
+                        <span class="iicon">✉️</span>
+                        <input type="email" id="login-email" placeholder="you@example.com" required autocomplete="email"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrap">
+                        <span class="iicon">🔒</span>
+                        <input type="password" id="login-pass" placeholder="Your password" required autocomplete="current-password"/>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit" id="login-btn">Sign In →</button>
+            </form>
+
+            <div class="auth-footer">
+                <a href="#" onclick="showForgot()">Forgot your password?</a>
+            </div>
+        </div>
+
+        <!-- ── SIGNUP PANEL ── -->
+        <div class="auth-panel" id="panel-signup">
+            <div class="alert error" id="signup-alert">
+                <span>⚠️</span><span id="signup-alert-msg">Something went wrong.</span>
+            </div>
+
+            <button class="btn-google" id="google-signup-btn" onclick="googleSignIn()">
+                <svg class="g-logo" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.6 32.6 29.2 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.3 2.7l5.7-5.7C33.5 6.9 29 5 24 5 12.9 5 4 13.9 4 25s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 19 13 24 13c2.8 0 5.3 1 7.3 2.7l5.7-5.7C33.5 6.9 29 5 24 5 16.3 5 9.7 9 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5 0 9.5-1.9 12.9-4.9l-6-5.1C29.2 36.6 26.7 37.5 24 37.5c-5.2 0-9.6-3.4-11.2-8l-6.6 5.1C9.5 40.8 16.3 45 24 45z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l.1-.1 6 5.1C36.9 39.3 44 34.5 44 25c0-1.3-.1-2.6-.4-3.9z"/></svg>
+                Continue with Google
+            </button>
+
+            <div class="divider"><span>or create with email</span></div>
+
+            <form id="signup-form" onsubmit="handleSignup(event)">
+                <div class="input-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <div class="input-wrap">
+                            <span class="iicon">👤</span>
+                            <input type="text" id="su-fname" placeholder="First" required/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <div class="input-wrap">
+                            <span class="iicon">👤</span>
+                            <input type="text" id="su-lname" placeholder="Last" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrap">
+                        <span class="iicon">✉️</span>
+                        <input type="email" id="su-email" placeholder="you@example.com" required autocomplete="email"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrap">
+                        <span class="iicon">🔒</span>
+                        <input type="password" id="su-pass" placeholder="Min 8 characters" required oninput="checkStrength(this.value)" autocomplete="new-password"/>
+                    </div>
+                    <div class="strength-bar"><div class="strength-fill" id="s-fill"></div></div>
+                    <div class="strength-label" id="s-label"></div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <div class="input-wrap">
+                        <span class="iicon">🔒</span>
+                        <input type="password" id="su-pass2" placeholder="Repeat password" required autocomplete="new-password"/>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit" id="signup-btn">Create Account →</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toasts -->
+<div class="toast-wrap" id="twrap"></div>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+/* ── Detect OAuth callback (URL hash contains tokens) ── */
+const _isOAuthCallback = window.location.hash.includes('access_token')
+    || window.location.hash.includes('error');
+let _redirectHandled = false;
+
+/* ── TAB SWITCH ── */
+function switchTab(t) {
+    ['login','signup'].forEach(id => {
+        document.getElementById(`tab-${id}`).classList.toggle('active', id === t);
+        document.getElementById(`panel-${id}`).classList.toggle('active', id === t);
+    });
+}
+
+/* ── PASSWORD STRENGTH ── */
+function checkStrength(pw) {
+    const fill  = document.getElementById('s-fill');
+    const label = document.getElementById('s-label');
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    const levels = [
+        { w: '25%', c: '#ff003c', t: 'Weak' },
+        { w: '50%', c: '#ff9500', t: 'Fair' },
+        { w: '75%', c: '#ffd700', t: 'Good' },
+        { w: '100%', c: '#00e676', t: 'Strong' },
+    ];
+    const l = levels[score - 1] || { w: '0%', c: 'transparent', t: '' };
+    fill.style.width = l.w; fill.style.background = l.c;
+    label.textContent = l.t; label.style.color = l.c;
+}
+
+/* ── GET REDIRECT URL ── */
+function getRedirect() {
+    const p = new URLSearchParams(window.location.search);
+    return p.get('redirect') || 'index.html';
+}
+
+/* ── Redirect helper (prevents double-redirect) ── */
+function doRedirect(target) {
+    if (_redirectHandled) return;
+    _redirectHandled = true;
+    window.location.href = target;
+}
+
+/* ── AUTH STATE ── */
+onAuthStateChange(user => {
+    if (user && !_isOAuthCallback) {
+        // Already logged in (NOT an OAuth callback) → go to redirect
+        doRedirect(getRedirect());
+    }
+});
+
+/* ── Handle OAuth redirect back ── */
+/* This listener fires when the page is fully loaded after an OAuth redirect.
+   Supabase JS client auto-detects the hash tokens and sets the session. */
+supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (_isOAuthCallback && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
+        // Google OAuth login succeeded — redirect to saved target
+        const redir = sessionStorage.getItem('sb_redirect') || getRedirect();
+        sessionStorage.removeItem('sb_redirect');
+        // Upsert profile for Google users
+        const u = session.user;
+        if (u) {
+            supabaseClient.from('profiles').upsert({
+                id: u.id,
+                name: u.user_metadata?.full_name || u.user_metadata?.name || u.email?.split('@')[0],
+                email: u.email,
+                role: 'user',
+            }).then(() => {});
+        }
+        doRedirect(redir);
+    }
+});
+
+/* ── LOGIN ── */
+async function handleLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('login-btn');
+    btn.textContent = 'Signing in…'; btn.disabled = true;
+    hideAlert('login');
+    try {
+        await signInUser(
+            document.getElementById('login-email').value.trim(),
+            document.getElementById('login-pass').value
+        );
+        toast('✅ Welcome back!', 's');
+        setTimeout(() => doRedirect(getRedirect()), 800);
+    } catch (err) {
+        showAlert('login', friendlyError(err.code));
+        btn.textContent = 'Sign In →'; btn.disabled = false;
+    }
+}
+
+/* ── SIGNUP ── */
+async function handleSignup(e) {
+    e.preventDefault();
+    hideAlert('signup');
+    const fname = document.getElementById('su-fname').value.trim();
+    const lname = document.getElementById('su-lname').value.trim();
+    const email = document.getElementById('su-email').value.trim();
+    const pass1 = document.getElementById('su-pass').value;
+    const pass2 = document.getElementById('su-pass2').value;
+
+    if (pass1 !== pass2) { showAlert('signup', 'Passwords do not match.'); return; }
+    if (pass1.length < 8) { showAlert('signup', 'Password must be at least 8 characters.'); return; }
+
+    const btn = document.getElementById('signup-btn');
+    btn.textContent = 'Creating account…'; btn.disabled = true;
+
+    try {
+        await signUpUser(email, pass1, `${fname} ${lname}`);
+        toast('🎉 Account created! Redirecting…', 's');
+        setTimeout(() => doRedirect(getRedirect()), 1000);
+    } catch (err) {
+        showAlert('signup', friendlyError(err.code));
+        btn.textContent = 'Create Account →'; btn.disabled = false;
+    }
+}
+
+/* ── GOOGLE SIGN IN (Supabase OAuth redirect) ── */
+async function googleSignIn() {
+    try {
+        // Store redirect target before leaving the page
+        sessionStorage.setItem('sb_redirect', getRedirect());
+        await signInWithGoogle();
+        // Page will redirect to Google, then back to login.html
+    } catch (err) {
+        toast('❌ ' + friendlyError(err.message || err.code), 'e');
+    }
+}
+
+/* ── FORGOT PASSWORD ── */
+async function showForgot() {
+    const email = prompt('Enter your email address to reset password:');
+    if (!email) return;
+    try {
+        await sendPasswordReset(email);
+        toast('📧 Reset email sent! Check your inbox.', 's');
+    } catch (err) {
+        toast('❌ ' + friendlyError(err.message || err.code), 'e');
+    }
+}
+
+/* ── HELPERS ── */
+function showAlert(panel, msg) {
+    const a = document.getElementById(`${panel}-alert`);
+    document.getElementById(`${panel}-alert-msg`).textContent = msg;
+    a.classList.add('show');
+}
+function hideAlert(panel) {
+    document.getElementById(`${panel}-alert`).classList.remove('show');
+}
+
+function friendlyError(msg) {
+    if (!msg) return 'Something went wrong. Please try again.';
+    const m = String(msg).toLowerCase();
+    if (m.includes('invalid login') || m.includes('invalid credentials')) return 'Incorrect email or password.';
+    if (m.includes('already registered') || m.includes('already been registered')) return 'This email is already registered.';
+    if (m.includes('password') && m.includes('weak')) return 'Password is too weak (min 6 characters).';
+    if (m.includes('email') && m.includes('invalid')) return 'Please enter a valid email address.';
+    if (m.includes('too many')) return 'Too many attempts. Try again later.';
+    if (m.includes('user not found')) return 'No account found with this email.';
+    return msg || 'Something went wrong. Please try again.';
+}
+
+/* ── Fallback: check session on load ── */
+window.addEventListener('load', async () => {
+    // If it's an OAuth callback, give Supabase 2 seconds to process the hash
+    if (_isOAuthCallback) {
+        setTimeout(async () => {
+            if (_redirectHandled) return;
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                const redir = sessionStorage.getItem('sb_redirect') || getRedirect();
+                sessionStorage.removeItem('sb_redirect');
+                doRedirect(redir);
+            }
+        }, 2000);
+    } else {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) {
+            const redir = sessionStorage.getItem('sb_redirect') || getRedirect();
+            sessionStorage.removeItem('sb_redirect');
+            doRedirect(redir);
+        }
+    }
+});
+
+function toast(msg, type = 's', dur = 3500) {
+    const tw = document.getElementById('twrap');
+    const el = document.createElement('div');
+    el.className = `tx ${type}`;
+    el.textContent = msg;
+    tw.appendChild(el);
+    setTimeout(() => {
+        el.classList.add('out');
+        el.addEventListener('animationend', () => el.remove());
+    }, dur);
+}
+</script>
+</body>
+</html>

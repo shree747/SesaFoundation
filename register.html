@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Register for Marathon — Sesa Foundation</title>
+    <meta name="description" content="Register for upcoming Sesa Foundation marathon events."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --bg: #0d0d0f;
+            --crimson: #ff003c;
+            --gold: #ffd700;
+            --emerald: #00e676;
+            --sky: #00b3ff;
+            --text: #f0f0f5;
+            --muted: #888899;
+            --dim: #44445a;
+            --card: rgba(18,18,28,0.96);
+            --border: rgba(255,255,255,0.09);
+            --glass: rgba(255,255,255,0.04);
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        h1,h2,h3,h4 { font-family: 'Outfit', sans-serif; }
+
+        /* ── BACKGROUND ── */
+        .bg-hero {
+            position: fixed; top: 0; left: 0; right: 0; height: 500px;
+            background-image: url('https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover; background-position: center top;
+            z-index: 0;
+        }
+        .bg-hero::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(13,13,15,0.6) 0%, rgba(13,13,15,1) 100%);
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            padding: 1.2rem 5%; height: 70px;
+            display: flex; align-items: center; justify-content: space-between;
+            z-index: 200;
+            background: rgba(13,13,15,0.7); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; text-decoration: none; color: var(--text); }
+        .logo span { color: var(--crimson); }
+        .nav-right { display: flex; align-items: center; gap: 1rem; }
+        .nav-user { font-size: 0.85rem; color: var(--muted); }
+        .btn-nav {
+            padding: 0.5rem 1.1rem; border-radius: 8px; border: 1px solid var(--border);
+            background: transparent; color: var(--text); font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem; cursor: pointer; text-decoration: none;
+            transition: all 0.22s;
+        }
+        .btn-nav:hover { border-color: var(--crimson); color: var(--crimson); }
+        .btn-nav.home { color: var(--muted); }
+
+        /* ── PAGE LAYOUT ── */
+        .page {
+            position: relative; z-index: 10;
+            padding-top: 90px; min-height: 100vh;
+            padding-bottom: 4rem;
+        }
+
+        /* ── EVENT HERO ── */
+        .event-hero {
+            padding: 4rem 5% 3rem;
+            position: relative; z-index: 1;
+        }
+        .event-breadcrumb {
+            font-size: 0.78rem; color: var(--muted); margin-bottom: 1.2rem;
+            display: flex; align-items: center; gap: 0.4rem;
+        }
+        .event-breadcrumb a { color: var(--muted); text-decoration: none; }
+        .event-breadcrumb a:hover { color: var(--crimson); }
+        .event-badge {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.25);
+            color: var(--emerald); border-radius: 20px;
+            font-size: 0.72rem; font-weight: 600; padding: 0.3rem 0.8rem;
+            text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 1rem;
+        }
+        .badge-dot { width:6px; height:6px; border-radius:50%; background:var(--emerald); animation:pd 1.5s ease infinite; }
+        @keyframes pd { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+        .event-title {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 900; line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .event-meta-pills {
+            display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 2rem;
+        }
+        .pill {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            padding: 0.45rem 0.9rem;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            border-radius: 20px; font-size: 0.8rem; color: var(--muted);
+        }
+        .pill.gold { border-color: rgba(255,215,0,0.25); color: var(--gold); background: rgba(255,215,0,0.08); }
+        .pill.red  { border-color: rgba(255,0,60,0.25); color: #ff6685; background: rgba(255,0,60,0.08); }
+
+        /* ── MAIN CONTENT ── */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 2rem;
+            padding: 0 5%;
+            align-items: start;
+        }
+
+        /* ── FORM CARD ── */
+        .form-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .form-card::before {
+            content: ''; position: absolute; top:0; left:0; right:0; height:2px;
+            background: linear-gradient(90deg, var(--crimson), var(--gold));
+        }
+
+        .form-section {
+            padding: 2rem 2rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0;
+        }
+        .form-section:last-of-type { border-bottom: none; }
+        .form-section-title {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.2px; color: var(--muted); margin-bottom: 1.4rem;
+        }
+        .form-section-title .num {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: var(--crimson); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; padding-bottom: 2rem; }
+        .fg-full { grid-column: 1 / -1; }
+
+        .fg {
+            display: flex; flex-direction: column; gap: 0.4rem;
+        }
+        .fg label {
+            font-size: 0.74rem; font-weight: 600; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 0.8px;
+        }
+        .fg label .req { color: var(--crimson); margin-left: 2px; }
+        .fg .iw { position: relative; }
+        .fg .iw .ic {
+            position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+            color: var(--dim); font-size: 0.9rem; pointer-events: none;
+        }
+        .fg input, .fg select, .fg textarea {
+            width: 100%;
+            padding: 0.78rem 1rem 0.78rem 2.4rem;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text);
+            font-family: 'Inter', sans-serif; font-size: 0.88rem;
+            outline: none; transition: border-color 0.2s, background 0.2s;
+        }
+        .fg input:focus, .fg select:focus, .fg textarea:focus {
+            border-color: var(--crimson); background: rgba(255,0,60,0.04);
+        }
+        .fg input::placeholder, .fg textarea::placeholder { color: var(--dim); }
+        .fg select option { background: #12121c; }
+        .fg textarea { resize: vertical; min-height: 80px; padding-left: 1rem; }
+        .fg select { padding-left: 2.4rem; cursor: pointer; }
+
+        /* Radio / Checkbox */
+        .radio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap: 0.7rem; }
+        .radio-card {
+            position: relative;
+        }
+        .radio-card input { position: absolute; opacity: 0; width: 0; height: 0; }
+        .radio-card label {
+            display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+            padding: 0.85rem 0.6rem;
+            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+            border-radius: 10px; cursor: pointer; transition: all 0.22s;
+            font-size: 0.82rem; color: var(--muted); text-align: center;
+            text-transform: none; letter-spacing: 0;
+        }
+        .radio-card label .rc-icon { font-size: 1.3rem; margin-bottom: 0.1rem; }
+        .radio-card input:checked + label {
+            border-color: var(--crimson); background: rgba(255,0,60,0.1);
+            color: var(--text);
+        }
+        .radio-card label:hover { border-color: rgba(255,0,60,0.4); color: var(--text); }
+
+        /* T-shirt */
+        .tshirt-grid { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .ts-opt {
+            position: relative;
+        }
+        .ts-opt input { position: absolute; opacity:0; width:0; height:0; }
+        .ts-opt label {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 52px; height: 40px;
+            background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+            border-radius: 8px; cursor: pointer;
+            font-weight: 600; font-size: 0.82rem; color: var(--muted);
+            transition: all 0.2s; text-transform: none; letter-spacing: 0;
+        }
+        .ts-opt input:checked + label {
+            border-color: var(--gold); background: rgba(255,215,0,0.1); color: var(--gold);
+        }
+        .ts-opt label:hover { border-color: var(--gold); color: var(--gold); }
+
+        /* Terms */
+        .terms-row {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            padding: 1.5rem 2rem 2rem;
+        }
+        .terms-row input[type="checkbox"] {
+            width: 18px; height: 18px; accent-color: var(--crimson);
+            margin-top: 2px; flex-shrink: 0; cursor: pointer;
+        }
+        .terms-row p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+        .terms-row a { color: var(--crimson); text-decoration: none; }
+        .terms-row a:hover { text-decoration: underline; }
+
+        .form-footer {
+            padding: 0 2rem 2rem;
+        }
+        .btn-register {
+            width: 100%; padding: 1rem;
+            background: var(--crimson); color: #fff; border: none; border-radius: 12px;
+            font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700;
+            cursor: pointer; letter-spacing: 0.5px;
+            transition: all 0.25s; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .btn-register::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.12));
+        }
+        .btn-register:hover {
+            background: #d10032; box-shadow: 0 10px 30px rgba(255,0,60,0.5);
+            transform: translateY(-2px);
+        }
+        .btn-register:active { transform: translateY(0); }
+        .btn-register:disabled { opacity:0.55; cursor: not-allowed; transform: none; }
+
+        /* ── SIDEBAR CARD ── */
+        .sidebar-sticky { position: sticky; top: 90px; display: flex; flex-direction: column; gap: 1.2rem; }
+
+        .info-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+            overflow: hidden;
+        }
+        .info-img {
+            width: 100%; height: 160px;
+            background-image: url('https://images.unsplash.com/photo-1507034589631-9433cc6bc453?q=80&w=800&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+        }
+        .info-body { padding: 1.3rem; }
+        .info-label {
+            font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--crimson); font-weight: 700; margin-bottom: 0.5rem;
+        }
+        .info-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 1rem; }
+        .info-row {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-size: 0.82rem; color: var(--muted); padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .info-row-icon { font-size: 0.95rem; width: 20px; text-align: center; flex-shrink: 0; }
+
+        .progress-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+            padding: 1.3rem;
+        }
+        .progress-card h4 { font-size: 0.85rem; margin-bottom: 1rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+        .progress-bar {
+            height: 8px; border-radius: 4px; background: rgba(255,255,255,0.07); overflow: hidden; margin-bottom: 0.5rem;
+        }
+        .progress-fill {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, var(--crimson), var(--gold));
+            transition: width 1s ease;
+        }
+        .progress-meta { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--muted); }
+
+        /* ── SUCCESS STATE ── */
+        #success-screen {
+            display: none; text-align: center; padding: 4rem 2rem;
+        }
+        .success-icon {
+            font-size: 4rem; margin-bottom: 1rem;
+            animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes pop {
+            from { transform: scale(0.4); opacity:0; }
+            to   { transform: scale(1);   opacity:1; }
+        }
+        #success-screen h2 { font-size: 1.8rem; margin-bottom: 0.7rem; }
+        #success-screen p  { color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+
+        /* ── AUTH GUARD ── */
+        #auth-guard {
+            display: none; text-align: center; padding: 4rem 2rem;
+        }
+        #auth-guard .lock-icon { font-size: 3rem; margin-bottom: 1rem; }
+        #auth-guard h3 { font-size: 1.3rem; margin-bottom: 0.6rem; }
+        #auth-guard p  { color: var(--muted); margin-bottom: 1.8rem; font-size: 0.9rem; }
+        .btn-login-cta {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.85rem 2rem; background: var(--crimson); color: #fff;
+            border-radius: 10px; text-decoration: none; font-family: 'Outfit', sans-serif;
+            font-weight: 700; font-size: 0.95rem; transition: all 0.22s;
+        }
+        .btn-login-cta:hover { background: #d10032; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,0,60,0.4); }
+
+        /* ── SPINNER ── */
+        .loading-wrap { text-align: center; padding: 6rem 2rem; }
+        .spinner {
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 3px solid var(--border);
+            border-top-color: var(--crimson);
+            animation: spin 0.8s linear infinite; margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── TOAST ── */
+        .toast-wrap {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 9000;
+            display: flex; flex-direction: column; gap: 0.6rem; pointer-events: none;
+        }
+        .tx {
+            display: flex; align-items: center; gap: 0.6rem;
+            background: #1a1a28; border: 1px solid var(--border); border-radius: 10px;
+            padding: 0.8rem 1rem; font-size: 0.83rem; min-width: 240px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.4); pointer-events: auto;
+            animation: tin 0.32s ease both;
+        }
+        .tx.out { animation: tout 0.28s ease forwards; }
+        .tx.s { border-left: 3px solid #00e676; }
+        .tx.e { border-left: 3px solid var(--crimson); }
+        @keyframes tin  { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:none} }
+        @keyframes tout { to{opacity:0;transform:translateX(20px)} }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; }
+            .sidebar-sticky { position: static; }
+        }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .fg-full { grid-column: 1; }
+            .event-hero { padding: 2.5rem 5% 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-hero"></div>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="index.html" class="logo">SESA <span>FOUNDATION</span></a>
+    <div class="nav-right">
+        <span class="nav-user" id="nav-username"></span>
+        <a href="index.html" class="btn-nav home">← Home</a>
+        <button class="btn-nav" onclick="doLogout()" id="logout-btn" style="display:none">Log Out</button>
+    </div>
+</nav>
+
+<div class="page">
+    <!-- Loading -->
+    <div id="loading-wrap" class="loading-wrap">
+        <div class="spinner"></div>
+        <p style="color:var(--muted);font-size:0.9rem">Loading event details…</p>
+    </div>
+
+    <!-- Auth guard (shown if not logged in) -->
+    <div id="auth-guard" style="display:none">
+        <div class="event-hero" style="text-align:center;padding-top:2rem">
+            <div class="lock-icon">🔐</div>
+            <h3>Sign in to Register</h3>
+            <p>You need to be logged in to register for a marathon event.</p>
+            <a class="btn-login-cta" id="login-link" href="login.html">Sign In / Create Account →</a>
+        </div>
+    </div>
+
+    <!-- Main (shown when logged in and marathon loaded) -->
+    <div id="main-content" style="display:none">
+        <!-- Event Hero -->
+        <div class="event-hero">
+            <div class="event-breadcrumb">
+                <a href="index.html">Home</a> / <a href="index.html#marathon">Marathon Hub</a> / <span id="bc-name">Register</span>
+            </div>
+            <div id="event-live-badge" class="event-badge" style="display:none">
+                <div class="badge-dot"></div> Registration Open
+            </div>
+            <h1 class="event-title" id="ev-title">Marathon Event</h1>
+            <div class="event-meta-pills">
+                <div class="pill">📅 <span id="ev-date">—</span></div>
+                <div class="pill">📍 <span id="ev-loc">—</span></div>
+                <div class="pill gold">🏃 <span id="ev-dist">—</span></div>
+                <div class="pill red" id="ev-fee-pill">💳 <span id="ev-fee">Free</span></div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <!-- ── REGISTRATION FORM ── -->
+            <div>
+                <!-- Success screen -->
+                <div id="success-screen" class="form-card">
+                    <div class="success-icon">🎉</div>
+                    <h2>You're Registered!</h2>
+                    <p>Your spot has been confirmed. You'll receive a confirmation shortly.<br/>
+                    Get ready to run your best race!</p>
+                    <a href="index.html" class="btn-login-cta" style="margin:0 auto;text-decoration:none">← Back to Home</a>
+                </div>
+
+                <!-- Already registered -->
+                <div id="already-screen" class="form-card" style="display:none;text-align:center;padding:4rem 2rem">
+                    <div style="font-size:3rem;margin-bottom:1rem">✅</div>
+                    <h2 style="margin-bottom:0.6rem">Already Registered</h2>
+                    <p style="color:var(--muted);margin-bottom:2rem">You've already signed up for this event. We'll send you updates as race day approaches!</p>
+                    <a href="index.html" class="btn-login-cta" style="margin:0 auto;text-decoration:none">← Back to Home</a>
+                </div>
+
+                <!-- The form -->
+                <form class="form-card" id="reg-form" onsubmit="handleFormSubmit(event)" style="display:none">
+
+                    <!-- Section 1: Personal -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <div class="num">1</div> Personal Information
+                        </div>
+                        <div class="form-grid">
+                            <div class="fg">
+                                <label>First Name <span class="req">*</span></label>
+                                <div class="iw"><span class="ic">👤</span>
+                                    <input type="text" id="f-fname" placeholder="First name" required/>
+                                </div>
+                            </div>
+                            <div class="fg">
+                                <label>Last Name <span class="req">*</span></label>
+                                <div class="iw"><span class="ic">👤</span>
+                                    <input type="text" id="f-lname" placeholder="Last name" required/>
+                                </div>
+                            </div>
+                            <div class="fg">
+                                <label>Email <span class="req">*</span></label>
+                                <div class="iw"><span class="ic">✉️</span>
+                                    <input type="email" id="f-email" placeholder="you@example.com" required readonly/>
+                                </div>
+                            </div>
+                            <div class="fg">
+                                <label>Phone Number <span class="req">*</span></label>
+                                <div class="iw"><span class="ic">📱</span>
+                                    <input type="tel" id="f-phone" placeholder="+91 9XXXXXXXXX" required pattern="[0-9+\-\s]{7,15}"/>
+                                </div>
+                            </div>
+                            <div class="fg">
+                                <label>Date of Birth <span class="req">*</span></label>
+                                <div class="iw"><span class="ic">🎂</span>
+                                    <input type="date" id="f-dob" required/>
+                                </div>
+                            </div>
+                            <div class="fg">
+                                <label>Gender <span class="req">*</span></label>
+                                <div class="iw"><span class="ic">⚧</span>
+                                    <select id="f-gender" required>
+                                        <option value="" disabled selected>Select gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="non-binary">Non-binary</option>
+                                        <option value="prefer-not">Prefer not to say</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="fg fg-full">
+                                <label>City / State</label>
+                                <div class="iw"><span class="ic">🏙️</span>
+                                    <input type="text" id="f-city" placeholder="e.g. Mumbai, Maharashtra"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Race -->
+                    <div class="form-section">
+                        <div class="form-section-title" style="padding-top:1.5rem">
+                            <div class="num">2</div> Race Preferences
+                        </div>
+                        <div class="form-grid">
+                            <div class="fg fg-full">
+                                <label>Category <span class="req">*</span></label>
+                                <div class="radio-grid" id="category-grid">
+                                    <!-- Filled dynamically by distance -->
+                                </div>
+                            </div>
+                            <div class="fg fg-full">
+                                <label>T-Shirt Size <span class="req">*</span></label>
+                                <div class="tshirt-grid">
+                                    <div class="ts-opt"><input type="radio" name="tshirt" id="ts-xs" value="XS"/><label for="ts-xs">XS</label></div>
+                                    <div class="ts-opt"><input type="radio" name="tshirt" id="ts-s" value="S"/><label for="ts-s">S</label></div>
+                                    <div class="ts-opt"><input type="radio" name="tshirt" id="ts-m" value="M" checked/><label for="ts-m">M</label></div>
+                                    <div class="ts-opt"><input type="radio" name="tshirt" id="ts-l" value="L"/><label for="ts-l">L</label></div>
+                                    <div class="ts-opt"><input type="radio" name="tshirt" id="ts-xl" value="XL"/><label for="ts-xl">XL</label></div>
+                                    <div class="ts-opt"><input type="radio" name="tshirt" id="ts-xxl" value="XXL"/><label for="ts-xxl">XXL</label></div>
+                                </div>
+                            </div>
+                            <div class="fg fg-full">
+                                <label>Running Experience</label>
+                                <div class="iw"><span class="ic">🏅</span>
+                                    <select id="f-exp">
+                                        <option value="beginner">Beginner (first race!)</option>
+                                        <option value="intermediate" selected>Intermediate (1-5 races)</option>
+                                        <option value="advanced">Advanced (5+ races)</option>
+                                        <option value="elite">Elite runner</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Emergency -->
+                    <div class="form-section">
+                        <div class="form-section-title" style="padding-top:1.5rem">
+                            <div class="num">3</div> Emergency Contact
+                        </div>
+                        <div class="form-grid">
+                            <div class="fg">
+                                <label>Contact Name <span class="req">*</span></label>
+                                <div class="iw"><span class="ic">🧑</span>
+                                    <input type="text" id="f-ec-name" placeholder="Full name" required/>
+                                </div>
+                            </div>
+                            <div class="fg">
+                                <label>Contact Phone <span class="req">*</span></label>
+                                <div class="iw"><span class="ic">📞</span>
+                                    <input type="tel" id="f-ec-phone" placeholder="+91 9XXXXXXXXX" required/>
+                                </div>
+                            </div>
+                            <div class="fg fg-full">
+                                <label>Medical Conditions (if any)</label>
+                                <textarea id="f-medical" placeholder="List any known conditions, allergies, or medications the medical team should know about…"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="terms-row">
+                        <input type="checkbox" id="f-terms" required/>
+                        <p>I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Waiver of Liability</a>.
+                        I confirm that I am physically fit to participate in this event. I consent to medical treatment
+                        in case of emergency during the race.</p>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="form-footer">
+                        <button type="submit" class="btn-register" id="submit-btn" style="margin-bottom: 0.8rem">
+                            <span id="btn-text">🏁 Secure My Spot</span>
+                        </button>
+                        <button type="button" class="btn-outline" style="width:100%; border-radius:12px; font-weight:600" onclick="clearFormForAnother()">
+                            👥 Register for Another Person
+                        </button>
+                        <div id="form-err" style="color:var(--crimson);font-size:0.82rem;text-align:center;margin-top:0.8rem;display:none"></div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ── SIDEBAR ── -->
+            <div class="sidebar-sticky">
+                <!-- Event Info Card -->
+                <div class="info-card" id="info-card">
+                    <div class="info-img" id="info-img"></div>
+                    <div class="info-body">
+                        <div class="info-label" id="info-badge">Live Event</div>
+                        <div class="info-title" id="info-title">—</div>
+                        <div class="info-row"><span class="info-row-icon">📅</span><span id="i-date">—</span></div>
+                        <div class="info-row"><span class="info-row-icon">📍</span><span id="i-loc">—</span></div>
+                        <div class="info-row"><span class="info-row-icon">🏃</span><span id="i-dist">—</span></div>
+                        <div class="info-row"><span class="info-row-icon">💳</span><span id="i-fee">Free</span></div>
+                        <div class="info-row"><span class="info-row-icon">🏢</span><span id="i-org">Sesa Foundation</span></div>
+                    </div>
+                </div>
+
+                <!-- Spots Progress -->
+                <div class="progress-card" id="progress-card" style="display:none">
+                    <h4>Registration Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+                    </div>
+                    <div class="progress-meta">
+                        <span id="prog-count">— spots filled</span>
+                        <span id="prog-cap">— total</span>
+                    </div>
+                </div>
+
+                <!-- Countdown -->
+                <div class="info-card">
+                    <div class="info-body">
+                        <div class="info-label">Race Countdown</div>
+                        <div style="display:flex;gap:0.6rem;margin-top:0.5rem" id="cd-mini">
+                            <div style="text-align:center;flex:1;background:rgba(255,0,60,0.1);border:1px solid rgba(255,0,60,0.2);border-radius:8px;padding:0.7rem 0.3rem">
+                                <div style="font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:800" id="cd-d">--</div>
+                                <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Days</div>
+                            </div>
+                            <div style="text-align:center;flex:1;background:rgba(255,0,60,0.1);border:1px solid rgba(255,0,60,0.2);border-radius:8px;padding:0.7rem 0.3rem">
+                                <div style="font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:800" id="cd-h">--</div>
+                                <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Hrs</div>
+                            </div>
+                            <div style="text-align:center;flex:1;background:rgba(255,0,60,0.1);border:1px solid rgba(255,0,60,0.2);border-radius:8px;padding:0.7rem 0.3rem">
+                                <div style="font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:800" id="cd-m">--</div>
+                                <div style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Min</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-wrap" id="twrap"></div>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+/* ── GLOBALS ── */
+let currentUser   = null;
+let currentEvent  = null;
+let countdownTimer = null;
+
+/* ── CATEGORY MAP ── */
+const CATEGORY_MAP = {
+    '5K'     : [{ val:'open-5k', icon:'🟢', label:'Open 5K' }, { val:'u18-5k', icon:'🔵', label:'Under 18' }],
+    '10K'    : [{ val:'open-10k', icon:'🟡', label:'Open 10K' }, { val:'masters-10k', icon:'🟠', label:'Masters (40+)' }],
+    '21K'    : [{ val:'half-general', icon:'🟣', label:'General' }, { val:'half-elite', icon:'⚡', label:'Elite' }],
+    '42K'    : [{ val:'full-general', icon:'🔴', label:'General' }, { val:'full-elite', icon:'💎', label:'Elite' }],
+    'Custom' : [{ val:'custom-open', icon:'🏃', label:'Open Category' }],
+};
+
+/* ── INIT ── */
+onAuthStateChange(async (user) => {
+    if (user) {
+        currentUser = user;
+        document.getElementById('nav-username').textContent = user.displayName || user.email;
+        document.getElementById('logout-btn').style.display = 'flex';
+        // Pre-fill email
+        const emailEl = document.getElementById('f-email');
+        if (emailEl) { emailEl.value = user.email; }
+        // Pre-fill name
+        if (user.displayName) {
+            const parts = user.displayName.split(' ');
+            const el1 = document.getElementById('f-fname');
+            const el2 = document.getElementById('f-lname');
+            if (el1 && !el1.value) el1.value = parts[0] || '';
+            if (el2 && !el2.value) el2.value = parts.slice(1).join(' ') || '';
+        }
+
+        // Auto-fill from past registration
+        try {
+            const pastRegs = await getUserRegistrations(user.uid);
+            if (pastRegs && pastRegs.length > 0) {
+                const latest = pastRegs[0];
+                if (latest.phone) document.getElementById('f-phone').value = latest.phone;
+                if (latest.dob) document.getElementById('f-dob').value = latest.dob;
+                if (latest.gender) document.getElementById('f-gender').value = latest.gender;
+                if (latest.name) {
+                    const parts = latest.name.split(' ');
+                    document.getElementById('f-fname').value = parts[0] || '';
+                    document.getElementById('f-lname').value = parts.slice(1).join(' ') || '';
+                }
+            }
+        } catch(e) {}
+
+        await loadEvent();
+    } else {
+        // Not logged in
+        document.getElementById('loading-wrap').style.display = 'none';
+        const guard = document.getElementById('auth-guard');
+        guard.style.display = 'block';
+        // Set login redirect
+        const params = new URLSearchParams(window.location.search);
+        const mid = params.get('id');
+        document.getElementById('login-link').href = `login.html?redirect=register.html${mid ? '?id=' + mid : ''}`;
+    }
+});
+
+async function loadEvent() {
+    const params = new URLSearchParams(window.location.search);
+    const mid = params.get('id');
+
+    let event = null;
+    if (mid) {
+        // Load specific marathon
+        event = await getMarathon(mid).catch(() => null);
+    }
+    // Fall back to first published
+    if (!event) {
+        const list = await getPublishedMarathons().catch(() => []);
+        event = list[0] || null;
+    }
+
+    document.getElementById('loading-wrap').style.display = 'none';
+
+    if (!event) {
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('reg-form').innerHTML = `
+            <div style="text-align:center;padding:4rem 2rem">
+                <div style="font-size:3rem;margin-bottom:1rem">🚫</div>
+                <h3 style="margin-bottom:0.6rem">No Active Events</h3>
+                <p style="color:var(--muted);margin-bottom:1.5rem">There are no published marathon events at the moment. Check back soon!</p>
+                <a href="index.html" class="btn-login-cta" style="text-decoration:none;display:inline-flex">← Back to Home</a>
+            </div>`;
+        document.getElementById('reg-form').style.display = 'block';
+        return;
+    }
+
+    currentEvent = event;
+    populateEventUI(event);
+
+    // Check if already registered
+    const already = await checkAlreadyRegistered(currentUser.uid, event.id).catch(() => false);
+    if (already) {
+        document.getElementById('already-screen').style.display = 'block';
+    } else {
+        document.getElementById('reg-form').style.display = 'block';
+    }
+
+    document.getElementById('main-content').style.display = 'block';
+}
+
+function populateEventUI(ev) {
+    const dateStr = ev.date ? new Date(ev.date).toLocaleDateString('en-IN', {
+        weekday:'long', day:'numeric', month:'long', year:'numeric',
+        hour:'2-digit', minute:'2-digit'
+    }) : '—';
+    const feeStr = ev.fee && ev.fee > 0 ? `₹${Number(ev.fee).toLocaleString('en-IN')}` : 'Free Entry';
+
+    // Hero
+    document.getElementById('bc-name').textContent = ev.name;
+    document.getElementById('ev-title').textContent = ev.name;
+    document.getElementById('ev-date').textContent  = dateStr;
+    document.getElementById('ev-loc').textContent   = ev.location || '—';
+    document.getElementById('ev-dist').textContent  = ev.distance || '—';
+    document.getElementById('ev-fee').textContent   = feeStr;
+    if (ev.status === 'published') document.getElementById('event-live-badge').style.display = 'inline-flex';
+
+    // Sidebar info
+    document.getElementById('info-title').textContent = ev.name;
+    document.getElementById('i-date').textContent     = dateStr;
+    document.getElementById('i-loc').textContent      = ev.location || '—';
+    document.getElementById('i-dist').textContent     = ev.distance || '—';
+    document.getElementById('i-fee').textContent      = feeStr;
+    document.getElementById('i-org').textContent      = ev.organiser || 'Sesa Foundation';
+    if (ev.image) {
+        document.getElementById('info-img').style.backgroundImage = `url('${ev.image}')`;
+    }
+
+    // Category grid
+    const cats = CATEGORY_MAP[ev.distance] || CATEGORY_MAP['Custom'];
+    const grid = document.getElementById('category-grid');
+    grid.innerHTML = cats.map((c, i) => `
+        <div class="radio-card">
+            <input type="radio" name="category" id="cat-${c.val}" value="${c.val}" ${i===0?'checked':''}/>
+            <label for="cat-${c.val}">
+                <div class="rc-icon">${c.icon}</div>
+                ${c.label}
+            </label>
+        </div>
+    `).join('');
+
+    // Spots progress
+    if (ev.capacity) {
+        document.getElementById('progress-card').style.display = 'block';
+        document.getElementById('prog-cap').textContent = `${Number(ev.capacity).toLocaleString()} total`;
+        // Get registration count from Supabase
+        getMarathonSpotCount(ev.id).then(count => {
+            const pct = Math.min(100, Math.round(count / ev.capacity * 100));
+            document.getElementById('prog-fill').style.width = pct + '%';
+            document.getElementById('prog-count').textContent = `${count} spots filled`;
+        }).catch(() => {});
+    }
+
+    // Countdown
+    if (ev.date) startMiniCountdown(new Date(ev.date));
+}
+
+/* ── MINI COUNTDOWN ── */
+function startMiniCountdown(target) {
+    if (countdownTimer) clearInterval(countdownTimer);
+    function tick() {
+        const diff = target - Date.now();
+        if (diff <= 0) { clearInterval(countdownTimer); return; }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
+        document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+        document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+    }
+    tick();
+    countdownTimer = setInterval(tick, 60000);
+}
+
+/* ── FORM SUBMIT ── */
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    const errEl = document.getElementById('form-err');
+    errEl.style.display = 'none';
+
+    // Gather values
+    const fname   = document.getElementById('f-fname').value.trim();
+    const lname   = document.getElementById('f-lname').value.trim();
+    const email   = document.getElementById('f-email').value.trim();
+    const phone   = document.getElementById('f-phone').value.trim();
+    const dob     = document.getElementById('f-dob').value;
+    const gender  = document.getElementById('f-gender').value;
+    const city    = document.getElementById('f-city').value.trim();
+    const catEl   = document.querySelector('input[name="category"]:checked');
+    const tshirt  = document.querySelector('input[name="tshirt"]:checked')?.value || 'M';
+    const exp     = document.getElementById('f-exp').value;
+    const ecName  = document.getElementById('f-ec-name').value.trim();
+    const ecPhone = document.getElementById('f-ec-phone').value.trim();
+    const medical = document.getElementById('f-medical').value.trim();
+    const terms   = document.getElementById('f-terms').checked;
+
+    if (!terms)  { errEl.textContent = 'Please accept the terms and conditions.'; errEl.style.display='block'; return; }
+    if (!catEl)  { errEl.textContent = 'Please select a race category.'; errEl.style.display='block'; return; }
+
+    document.getElementById('btn-text').textContent = '⏳ Submitting…';
+    btn.disabled = true;
+
+    try {
+        const payload = {
+            uid         : currentUser.uid,
+            marathonId  : currentEvent.id,
+            marathonName: currentEvent.name,
+            name        : `${fname} ${lname}`,
+            email, phone, dob, gender, city,
+            category    : catEl.value,
+            tshirt, exp,
+            emergencyContact : { name: ecName, phone: ecPhone },
+            medicalInfo : medical,
+        };
+
+        await submitRegistration(payload);
+
+        // Show success
+        document.getElementById('reg-form').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+        toast('🎉 Registration successful!', 's');
+
+    } catch (err) {
+        console.error(err);
+        errEl.textContent = 'Registration failed. Please try again.';
+        errEl.style.display = 'block';
+        document.getElementById('btn-text').textContent = '🏁 Secure My Spot';
+        btn.disabled = false;
+    }
+}
+
+/* ── REGISTER FOR ANOTHER PERSON ── */
+function clearFormForAnother() {
+    document.getElementById('f-fname').value = '';
+    document.getElementById('f-lname').value = '';
+    document.getElementById('f-email').value = '';
+    document.getElementById('f-phone').value = '';
+    document.getElementById('f-dob').value = '';
+    document.getElementById('f-gender').value = '';
+    document.getElementById('f-medical').value = '';
+    document.getElementById('f-ec-name').value = '';
+    document.getElementById('f-ec-phone').value = '';
+    toast('Form cleared for new runner details!', 's');
+}
+
+/* ── LOGOUT ── */
+async function doLogout() {
+    await signOutUser();
+    window.location.href = 'index.html';
+}
+
+/* ── TOAST ── */
+function toast(msg, type = 's', dur = 4000) {
+    const tw = document.getElementById('twrap');
+    const el = document.createElement('div');
+    el.className = `tx ${type}`;
+    el.textContent = msg;
+    tw.appendChild(el);
+    setTimeout(() => { el.classList.add('out'); el.addEventListener('animationend', () => el.remove()); }, dur);
+}
+</script>
+</body>
+</html>
