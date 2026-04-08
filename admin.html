@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Portal — Sesa Foundation</title>
+    <meta name="description" content="Sesa Foundation Admin Portal — Manage marathon events, registrations, and more." />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="login-screen">
+    <div class="login-particles" id="particles"></div>
+    <div class="login-card" id="login-card">
+        <div class="login-emblem">🏃</div>
+        <div class="login-logo">SESA <span>FOUNDATION</span></div>
+        <div class="login-subtitle">Admin Portal</div>
+
+        <div class="pin-label">Enter Admin PIN</div>
+        <div class="pin-dots">
+            <div class="pin-dot" id="d0"></div>
+            <div class="pin-dot" id="d1"></div>
+            <div class="pin-dot" id="d2"></div>
+            <div class="pin-dot" id="d3"></div>
+        </div>
+
+        <div class="pin-numpad">
+            <button class="pin-btn" onclick="enterPin('1')">1</button>
+            <button class="pin-btn" onclick="enterPin('2')">2</button>
+            <button class="pin-btn" onclick="enterPin('3')">3</button>
+            <button class="pin-btn" onclick="enterPin('4')">4</button>
+            <button class="pin-btn" onclick="enterPin('5')">5</button>
+            <button class="pin-btn" onclick="enterPin('6')">6</button>
+            <button class="pin-btn" onclick="enterPin('7')">7</button>
+            <button class="pin-btn" onclick="enterPin('8')">8</button>
+            <button class="pin-btn" onclick="enterPin('9')">9</button>
+            <button class="pin-btn del" onclick="deletePin()">⌫</button>
+            <button class="pin-btn zero" onclick="enterPin('0')">0</button>
+        </div>
+        <div class="pin-error" id="pin-error">Incorrect PIN. Try again.</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP SHELL
+══════════════════════════════════════════ -->
+<div id="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-text">SESA <span>FOUNDATION</span></div>
+            <div class="admin-badge">Admin Control Panel</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Main</div>
+            <div class="nav-item active" onclick="navigate('dashboard')" id="nav-dashboard">
+                <span class="nav-icon">📊</span> Dashboard
+            </div>
+            <div class="nav-item" onclick="navigate('marathons')" id="nav-marathons">
+                <span class="nav-icon">🏃</span> Marathon Events
+                <span class="nav-badge" id="marathon-count-badge">0</span>
+            </div>
+
+            <div class="nav-section-label">Community</div>
+            <div class="nav-item" onclick="navigate('registrations')" id="nav-registrations">
+                <span class="nav-icon">👥</span> Registrations
+                <span class="nav-badge" id="reg-count-badge">0</span>
+            </div>
+
+            <div class="nav-section-label">System</div>
+            <div class="nav-item" onclick="navigate('settings')" id="nav-settings">
+                <span class="nav-icon">⚙️</span> Settings
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <span>🚪</span> Log Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="main-content">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <h1 class="topbar-title" id="topbar-title">Dashboard</h1>
+            </div>
+            <div class="topbar-right" style="display:flex; align-items:center; gap: 1.5rem">
+                <div class="notifications-wrap" style="position:relative; cursor:pointer;" onclick="toggleNotifs()">
+                    <span style="font-size:1.4rem">🔔</span>
+                    <span class="nav-badge" id="notif-badge" style="position:absolute; top:-5px; right:-10px; background:var(--crimson); display:none; padding: 2px 6px; font-size: 0.7rem;">0</span>
+                    <div id="notif-dropdown" style="display:none; position:absolute; right:0; top:40px; background:#111; border:1px solid #333; width:320px; border-radius:12px; padding:1rem; box-shadow:0 10px 30px rgba(0,0,0,0.8); z-index:100; cursor:default; backdrop-filter:blur(20px)" onclick="event.stopPropagation()">
+                        <h4 style="margin-bottom:1rem; border-bottom:1px solid var(--glass-border); padding-bottom:0.5rem; font-family:'Outfit'">Foundation Leads</h4>
+                        <div id="notif-list" style="max-height:300px; overflow-y:auto; display:flex; flex-direction:column; gap:0.8rem; font-size: 0.85rem"></div>
+                    </div>
+                </div>
+                <span class="topbar-time" id="topbar-time"></span>
+                <div class="admin-avatar">A</div>
+            </div>
+        </header>
+
+        <!-- ── DASHBOARD PAGE ─────────────────── -->
+        <section class="page active" id="page-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon red">🏁</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-total">0</div>
+                        <div class="stat-label">Total Marathons</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">✅</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-active">0</div>
+                        <div class="stat-label">Published</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">👥</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-regs">0</div>
+                        <div class="stat-label">Registrations</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon gold">⏳</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="stat-upcoming">0</div>
+                        <div class="stat-label">Upcoming</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Quick Actions -->
+                <div class="card">
+                    <h3>⚡ Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="openCreateModal()">
+                            <div class="qa-icon red" style="background:var(--crimson-dim)">➕</div>
+                            <div class="qa-info">
+                                <strong>Create Marathon</strong>
+                                <span>Schedule a new race event</span>
+                            </div>
+                        </button>
+                        <button class="quick-action-btn" onclick="navigate('registrations')">
+                            <div class="qa-icon blue" style="background:var(--sky-dim)">📋</div>
+                            <div class="qa-info">
+                                <strong>View Registrations</strong>
+                                <span>Check who signed up</span>
+                            </div>
+                        </button>
+                        <button class="quick-action-btn" onclick="navigate('marathons')">
+                            <div class="qa-icon gold" style="background:var(--gold-dim)">🏆</div>
+                            <div class="qa-info">
+                                <strong>Manage Events</strong>
+                                <span>Edit, publish, or cancel</span>
+                            </div>
+                        </button>
+                        <button class="quick-action-btn" onclick="window.open('index.html','_blank')">
+                            <div class="qa-icon green" style="background:var(--emerald-dim)">🌐</div>
+                            <div class="qa-info">
+                                <strong>View Public Site</strong>
+                                <span>See the live website</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Activity Log -->
+                <div class="card">
+                    <h3>📜 Recent Activity</h3>
+                    <div class="activity-list" id="activity-list">
+                        <div style="color:var(--text-dim);font-size:0.84rem;text-align:center;padding:2rem 0">
+                            No activity yet. Create your first marathon!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Published Event Preview -->
+            <div id="live-preview-wrap" style="margin-top:1.5rem;display:none">
+                <div class="card">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+                        <h3>🔴 Live on Public Site</h3>
+                        <span class="live-indicator"><span class="live-dot"></span> Live</span>
+                    </div>
+                    <div id="live-preview-content" style="font-size:0.88rem;color:var(--text-muted)"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── MARATHONS PAGE ──────────────────── -->
+        <section class="page" id="page-marathons">
+            <div class="section-header">
+                <h2>🏃 Marathon Events</h2>
+                <button class="btn btn-primary" onclick="openCreateModal()">➕ Create Marathon</button>
+            </div>
+
+            <div class="table-wrapper">
+                <div class="table-toolbar">
+                    <div class="search-wrap">
+                        <span class="s-icon">🔍</span>
+                        <input type="text" id="marathon-search" placeholder="Search events…" oninput="renderMarathonTable()" />
+                    </div>
+                    <div style="display:flex;gap:0.6rem;flex-wrap:wrap">
+                        <select id="status-filter" onchange="renderMarathonTable()" style="background:var(--bg-card);border:1px solid var(--glass-border);border-radius:8px;color:var(--text-main);padding:0.5rem 0.8rem;font-family:'Inter',sans-serif;font-size:0.82rem;outline:none;cursor:pointer">
+                            <option value="">All Status</option>
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="marathon-table-wrap">
+                    <table class="admin-table" id="marathon-table">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Date & Time</th>
+                                <th>Location</th>
+                                <th>Distance</th>
+                                <th>Max Participants</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="marathon-tbody"></tbody>
+                    </table>
+                    <div class="empty-state" id="marathon-empty" style="display:none">
+                        <div class="empty-icon">🏁</div>
+                        <p>No marathon events yet.</p>
+                        <button class="btn btn-primary" onclick="openCreateModal()">➕ Create First Marathon</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── REGISTRATIONS PAGE ─────────────── -->
+        <section class="page" id="page-registrations">
+            <div class="section-header">
+                <h2>👥 Registrations</h2>
+                <button class="btn btn-outline" onclick="exportRegistrations()">⬇ Export CSV</button>
+            </div>
+
+            <div class="reg-filter-bar">
+                <select id="reg-marathon-filter" onchange="renderRegistrations()" style="background:var(--bg-card);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-main);padding:0.6rem 1rem;font-family:'Inter',sans-serif;font-size:0.85rem;outline:none;cursor:pointer">
+                    <option value="">All Marathons</option>
+                </select>
+                <select id="reg-status-filter" onchange="renderRegistrations()" style="background:var(--bg-card);border:1px solid var(--glass-border);border-radius:10px;color:var(--text-main);padding:0.6rem 1rem;font-family:'Inter',sans-serif;font-size:0.85rem;outline:none;cursor:pointer">
+                    <option value="">All Status</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Interest</th>
+                            <th>Submitted</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reg-tbody"></tbody>
+                </table>
+                <div class="empty-state" id="reg-empty" style="display:none">
+                    <div class="empty-icon">📋</div>
+                    <p>No registrations yet. They appear here once users submit the public form.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── SETTINGS PAGE ──────────────────── -->
+        <section class="page" id="page-settings">
+            <div class="section-header">
+                <h2>⚙️ Settings</h2>
+            </div>
+
+            <div class="settings-group">
+                <h3>🔐 Security</h3>
+                <div class="settings-row">
+                    <div class="settings-row-info">
+                        <strong>Admin PIN</strong>
+                        <span>Change your 4-digit access PIN</span>
+                    </div>
+                    <div class="pin-change-row">
+                        <input type="password" id="new-pin" maxlength="4" placeholder="New PIN" />
+                        <button class="btn btn-outline btn-sm" onclick="changePin()">Update</button>
+                    </div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-info">
+                        <strong>Auto-logout</strong>
+                        <span>Lock portal after 30 minutes</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="auto-logout-toggle" checked />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <h3>🌐 Public Site Integration</h3>
+                <div class="settings-row">
+                    <div class="settings-row-info">
+                        <strong>Live Marathon Sync</strong>
+                        <span>Published events auto-update the public countdown</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="sync-toggle" checked />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-info">
+                        <strong>Registration Capture</strong>
+                        <span>Store form submissions from public site</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="reg-capture-toggle" checked />
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <h3>🗑️ Danger Zone</h3>
+                <div class="settings-row">
+                    <div class="settings-row-info">
+                        <strong>Clear All Marathon Events</strong>
+                        <span>Permanently delete all event data</span>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="confirmClearMarathons()">Clear Events</button>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-info">
+                        <strong>Clear All Registrations</strong>
+                        <span>Permanently delete all registration data</span>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="confirmClearRegs()">Clear Regs</button>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-row-info">
+                        <strong>Reset Everything</strong>
+                        <span>Wipe all admin data and return to defaults</span>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="confirmResetAll()">Full Reset</button>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- /main-content -->
+</div><!-- /app -->
+
+<!-- ══════════════════════════════════════════
+     CREATE / EDIT MARATHON MODAL
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="marathon-modal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modal-title">Create Marathon Event</h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="edit-id" />
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>Event Name *</label>
+                    <input type="text" id="f-name" placeholder="e.g. Sesa Cup Marathon 2026" />
+                </div>
+                <div class="form-group">
+                    <label>Race Date & Time *</label>
+                    <input type="datetime-local" id="f-date" />
+                </div>
+                <div class="form-group">
+                    <label>Location *</label>
+                    <input type="text" id="f-location" placeholder="e.g. Mumbai, Maharashtra" />
+                </div>
+                <div class="form-group">
+                    <label>Distance</label>
+                    <select id="f-distance">
+                        <option value="5K">5K</option>
+                        <option value="10K" selected>10K</option>
+                        <option value="21K">21K (Half Marathon)</option>
+                        <option value="42K">42K (Full Marathon)</option>
+                        <option value="Custom">Custom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Max Participants</label>
+                    <input type="number" id="f-capacity" placeholder="e.g. 500" min="1" />
+                </div>
+                <div class="form-group">
+                    <label>Entry Fee (₹)</label>
+                    <input type="number" id="f-fee" placeholder="0 = Free" min="0" value="0" />
+                </div>
+                <div class="form-group">
+                    <label>Organiser</label>
+                    <input type="text" id="f-organiser" placeholder="Sesa Foundation" />
+                </div>
+                <div class="form-group full">
+                    <label>Description</label>
+                    <textarea id="f-desc" placeholder="Describe this marathon event…"></textarea>
+                </div>
+                <div class="form-group full">
+                    <label>Cover Image URL (optional)</label>
+                    <input type="url" id="f-image" placeholder="https://…" />
+                </div>
+                <div class="form-group full">
+                    <label>Status</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="f-status" value="draft" checked />
+                            <span>📝 Draft</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="f-status" value="published" />
+                            <span>✅ Published</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="f-status" value="cancelled" />
+                            <span>❌ Cancelled</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="handleSaveMarathon()">💾 Save Event</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CONFIRM DIALOG
+══════════════════════════════════════════ -->
+<div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+        <div class="confirm-icon" id="confirm-icon">⚠️</div>
+        <h4 id="confirm-title">Are you sure?</h4>
+        <p id="confirm-msg">This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+            <button class="btn btn-danger" id="confirm-ok-btn" onclick="confirmAction()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

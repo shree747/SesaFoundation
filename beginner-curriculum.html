@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beginner Curriculum | Sesa Foundation</title>
+    <meta name="description" content="Sesa Foundation Beginner Taekwondo Curriculum — what the master teaches, match preparation, and core values of Respect, Discipline & Focus.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0d0d;
+            --crimson: #ff003c;
+            --gold: #ffd700;
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --glass-bg: rgba(255,255,255,0.04);
+            --glass-border: rgba(255,255,255,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
+        h1,h2,h3,h4 { font-family: 'Outfit', sans-serif; }
+        .accent { color: var(--crimson); }
+        .gold   { color: var(--gold); }
+
+        /* NAV */
+        .navbar {
+            position: fixed; top: 0; width: 100%;
+            padding: 1.2rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 200;
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(13,13,13,0.85);
+        }
+        .logo { font-size: 1.4rem; font-weight: 900; letter-spacing: 2px; text-decoration: none; color: var(--text-main); }
+        .logo span { color: var(--crimson); }
+        .back-btn {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: transparent; border: 1px solid var(--glass-border);
+            color: var(--text-main); padding: 0.6rem 1.4rem; border-radius: 8px;
+            cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.9rem;
+            letter-spacing: 1px; text-decoration: none; transition: all 0.3s;
+        }
+        .back-btn:hover { border-color: var(--crimson); color: var(--crimson); box-shadow: 0 0 12px rgba(255,0,60,0.3); }
+        .back-btn svg { width: 16px; height: 16px; }
+
+        /* ── HERO (unchanged) ── */
+        .curriculum-hero {
+            margin-top: 72px; position: relative; width: 100%; height: 75vh; overflow: hidden;
+        }
+        .curriculum-hero img {
+            width: 100%; height: 100%; object-fit: cover; object-position: center 20%;
+            display: block; transition: transform 8s ease;
+        }
+        .curriculum-hero:hover img { transform: scale(1.04); }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(13,13,13,0.2) 0%, rgba(13,13,13,0.97) 100%);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 4rem 7%;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--crimson); color: #fff; font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            padding: 0.4rem 1rem; border-radius: 50px; margin-bottom: 1.2rem; width: fit-content;
+        }
+        .hero-title { font-size: clamp(2.5rem,6vw,5rem); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.15rem; color: var(--text-muted); max-width: 620px; line-height: 1.7; }
+        .hero-stats { display: flex; gap: 2.5rem; margin-top: 2.2rem; flex-wrap: wrap; }
+        .hero-stat { display: flex; flex-direction: column; }
+        .hero-stat span { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800; color: var(--gold); }
+        .hero-stat small { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+
+        /* ── SECTIONS ── */
+        .sec { padding: 4.5rem 7%; border-bottom: 1px solid var(--glass-border); }
+        .sec:nth-child(even) { background: #111; }
+        .eyebrow {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--crimson); margin-bottom: 0.6rem;
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+        .eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--crimson); }
+        .sec-title { font-size: clamp(1.6rem,3.5vw,2.4rem); font-weight: 800; margin-bottom: 0.8rem; line-height: 1.15; }
+        .sec-sub { color: var(--text-muted); font-size: 1rem; line-height: 1.75; max-width: 700px; margin-bottom: 2.5rem; }
+
+        /* CARDS */
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1.2rem; }
+        .card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 14px; padding: 1.6rem 1.8rem;
+            position: relative; overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card::after {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background: linear-gradient(90deg,var(--crimson),var(--gold));
+            transform: scaleX(0); transform-origin: left; transition: transform 0.35s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+        .card:hover::after { transform: scaleX(1); }
+        .card-icon { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
+        .card h3 { font-size: 1.05rem; color: var(--gold); margin-bottom: 0.4rem; }
+        .card p  { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+
+        /* TIMELINE */
+        .timeline { position: relative; padding-left: 2.2rem; }
+        .timeline::before {
+            content:''; position:absolute; left:8px; top:0; bottom:0; width:2px;
+            background: linear-gradient(to bottom,var(--crimson),var(--gold),transparent);
+        }
+        .t-item { position:relative; margin-bottom: 2rem; padding-left: 1.2rem; }
+        .t-dot {
+            position:absolute; left:-2.2rem; top:5px;
+            width:16px; height:16px; border-radius:50%;
+            background:var(--bg-dark); border:2px solid var(--crimson);
+            box-shadow:0 0 8px rgba(255,0,60,0.5); transition:background 0.3s;
+        }
+        .t-item:hover .t-dot { background: var(--crimson); }
+        .t-phase { font-size:0.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--crimson); margin-bottom:0.3rem; }
+        .t-item h3 { font-size:1.1rem; margin-bottom:0.35rem; }
+        .t-item p  { font-size:0.88rem; color:var(--text-muted); line-height:1.65; }
+
+        /* PILLARS */
+        .pillars { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+        .pillar {
+            border-radius:16px; padding:2.2rem 1.8rem; text-align:center;
+            border:1px solid var(--glass-border); position:relative; overflow:hidden;
+            transition: transform 0.35s, box-shadow 0.35s;
+        }
+        .pillar:hover { transform:translateY(-6px); box-shadow:0 20px 50px rgba(0,0,0,0.45); }
+        .pillar.r  { background:linear-gradient(145deg,rgba(255,0,60,0.11),rgba(13,13,13,0.95)); }
+        .pillar.d  { background:linear-gradient(145deg,rgba(255,215,0,0.09),rgba(13,13,13,0.95)); }
+        .pillar.f  { background:linear-gradient(145deg,rgba(100,150,255,0.11),rgba(13,13,13,0.95)); }
+        .pglow {
+            position:absolute; top:-50px; left:50%; transform:translateX(-50%);
+            width:180px; height:180px; border-radius:50%; filter:blur(55px); opacity:0.18;
+        }
+        .r .pglow { background:var(--crimson); }
+        .d .pglow { background:var(--gold); }
+        .f .pglow { background:#6496ff; }
+        .picon { font-size:3rem; display:block; margin-bottom:1rem; position:relative; z-index:1; }
+        .pillar h3 { font-size:1.4rem; font-weight:800; letter-spacing:1px; margin-bottom:0.6rem; position:relative; z-index:1; }
+        .r h3 { color:var(--crimson); }
+        .d h3 { color:var(--gold); }
+        .f h3 { color:#6496ff; }
+        .pillar p  { font-size:0.88rem; color:var(--text-muted); line-height:1.7; position:relative; z-index:1; }
+        .plist { list-style:none; margin-top:1rem; text-align:left; position:relative; z-index:1; }
+        .plist li {
+            padding:0.4rem 0; font-size:0.84rem; color:var(--text-muted);
+            border-bottom:1px solid rgba(255,255,255,0.05);
+            display:flex; align-items:center; gap:0.5rem;
+        }
+        .plist li::before { content:'▸'; font-size:0.65rem; }
+        .r .plist li::before { color:var(--crimson); }
+        .d .plist li::before { color:var(--gold); }
+        .f .plist li::before { color:#6496ff; }
+
+        /* QUOTE */
+        .quote {
+            border-left: 4px solid var(--crimson); padding: 1.2rem 2rem;
+            background: rgba(255,0,60,0.06); border-radius: 0 10px 10px 0;
+            margin: 2rem 0; font-size: 1.1rem; font-style: italic; line-height: 1.7;
+        }
+        .quote cite { display:block; margin-top:0.6rem; font-style:normal; font-size:0.82rem; color:var(--text-muted); }
+
+        /* HOW-TEACHES STEPS */
+        .steps { display:flex; flex-direction:column; gap:0.7rem; }
+        .step {
+            display:flex; align-items:center; gap:1rem;
+            background:var(--glass-bg); border:1px solid var(--glass-border);
+            border-radius:10px; padding:1rem 1.4rem; transition:background 0.3s;
+        }
+        .step:hover { background:rgba(255,0,60,0.07); }
+        .snum { font-family:'Outfit',sans-serif; font-size:1.6rem; font-weight:900; color:var(--crimson); min-width:36px; }
+        .step h4 { font-size:0.95rem; margin-bottom:0.15rem; }
+        .step p  { font-size:0.82rem; color:var(--text-muted); }
+
+        /* TWO COL */
+        .two { display:grid; grid-template-columns:1fr 1fr; gap:3.5rem; align-items:start; }
+        .two-text p { color:var(--text-muted); line-height:1.8; font-size:0.95rem; margin-bottom:0.8rem; }
+
+        /* CTA */
+        .cta {
+            padding:4.5rem 7%; text-align:center;
+            background:linear-gradient(135deg,rgba(255,0,60,0.08),rgba(255,215,0,0.05));
+            border-top:1px solid var(--glass-border);
+        }
+        .cta h2 { font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:0.8rem; }
+        .cta p  { color:var(--text-muted); margin-bottom:2rem; font-size:1rem; }
+        .btn {
+            display:inline-block; background:var(--crimson); color:#fff;
+            padding:0.9rem 2.4rem; border-radius:8px; text-decoration:none;
+            font-weight:700; border:1px solid transparent; transition:all 0.3s;
+            font-family:'Outfit',sans-serif; letter-spacing:1px; text-transform:uppercase; font-size:0.95rem;
+        }
+        .btn:hover { background:transparent; border-color:var(--crimson); color:var(--crimson); box-shadow:0 0 18px rgba(255,0,60,0.35); }
+        .btn-o {
+            display:inline-block; background:transparent; color:var(--text-main);
+            padding:0.9rem 2rem; border-radius:8px; text-decoration:none;
+            font-weight:600; border:1px solid var(--glass-border); transition:all 0.3s;
+            font-family:'Outfit',sans-serif; letter-spacing:1px; margin-left:0.8rem;
+        }
+        .btn-o:hover { border-color:var(--gold); color:var(--gold); }
+
+        footer { text-align:center; padding:1.8rem; border-top:1px solid var(--glass-border); background:#080808; color:var(--text-muted); font-size:0.82rem; }
+
+        /* FADE */
+        .fu { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease,transform 0.6s ease; }
+        .fu.on { opacity:1; transform:translateY(0); }
+
+        @media(max-width:900px){ .pillars{grid-template-columns:1fr;} .two{grid-template-columns:1fr;gap:2rem;} }
+        @media(max-width:600px){ .curriculum-hero{height:55vh;} .hero-overlay{padding:2.5rem 5%;} .sec{padding:3rem 5%;} }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+    <a href="index.html" class="logo">SESA <span>FOUNDATION</span></a>
+    <a href="index.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back to Home
+    </a>
+</nav>
+
+<!-- ═══════════ HERO (UNCHANGED) ═══════════ -->
+<section class="curriculum-hero">
+    <img src="taekwondo_beginner.png" alt="Taekwondo Beginner Curriculum – Sesa Foundation">
+    <div class="hero-overlay">
+        <span class="hero-badge">🥋 Sesa Foundation</span>
+        <h1 class="hero-title">Beginner <span class="accent">Curriculum</span></h1>
+        <p class="hero-subtitle">
+            A complete journey from white belt to yellow belt — building warriors from the ground up
+            through proven Taekwondo principles under expert master guidance.
+        </p>
+        <div class="hero-stats">
+            <div class="hero-stat"><span>12</span><small>Core Techniques</small></div>
+            <div class="hero-stat"><span>8</span><small>Weeks Program</small></div>
+            <div class="hero-stat"><span>3</span><small>Core Pillars</small></div>
+            <div class="hero-stat"><span>1</span><small>Master Instructor</small></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 1. WHAT MASTER TEACHES ═══════════ -->
+<section class="sec fu">
+    <div class="eyebrow">What the Master Teaches</div>
+    <h2 class="sec-title">Core Skills Taught to <span class="gold">Every Beginner</span></h2>
+    <p class="sec-sub">From day one, the master builds confidence, body awareness, and fighting instinct together — not just physical moves.</p>
+
+    <div class="cards">
+        <div class="card">
+            <span class="card-icon">🧍</span>
+            <h3>Stance & Posture</h3>
+            <p>Standing correctly in <em>Narani Seogi</em> before anything else. Proper posture prevents injury and is the base of every technique.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">🤜</span>
+            <h3>Blocks (Makki)</h3>
+            <p>Low, middle, and high blocks — drilled daily to build defence instinct and arm coordination against real attacks.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">🦵</span>
+            <h3>Basic Kicks (Chagi)</h3>
+            <p>Front kick, side kick, and roundhouse kick taught step by step: chamber → extend → retract → land.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">👊</span>
+            <h3>Punches (Jirugi)</h3>
+            <p>Straight and reverse punches with proper hip rotation and timing — the first real strikes every beginner learns.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">📜</span>
+            <h3>Poomsae — Form 1</h3>
+            <p><em>Taeguk Il Jang</em>: a 17-movement sequence combining stances, blocks, and punches. Trains memory, rhythm, and flow.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">🤼</span>
+            <h3>1-Step Sparring</h3>
+            <p>Controlled partner drills — one attack, one defence-and-counter. Builds real-fight instinct in a safe, structured way.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 2. HOW MASTER TEACHES ═══════════ -->
+<section class="sec fu">
+    <div class="eyebrow">How the Master Teaches</div>
+    <h2 class="sec-title">The Master's <span class="accent">Teaching Method</span></h2>
+
+    <div class="two">
+        <div class="two-text">
+            <div class="quote">
+                "A beginner is a blank canvas. My job is not just to teach kicks — it is to build a body, a mind, and a spirit that can endure anything."
+                <cite>— Master, Sesa Foundation Taekwondo</cite>
+            </div>
+            <p>Every technique is first shown at full speed, then broken into slow-motion micro-steps. The master corrects posture, wrist angle, and hip rotation individually — no student is left behind.</p>
+            <p>Classes use <strong>mirror drills</strong> for self-correction and <strong>count-based repetitions</strong> to lock technique into muscle memory. Every session ends with a short reflection circle so students track their own growth.</p>
+        </div>
+        <div class="steps">
+            <div class="step"><span class="snum">1</span><div><h4>Demonstrate</h4><p>Full-speed, then slow-motion. Students see the goal first.</p></div></div>
+            <div class="step"><span class="snum">2</span><div><h4>Break It Down</h4><p>Split into parts with Korean terminology for each movement.</p></div></div>
+            <div class="step"><span class="snum">3</span><div><h4>Group Drill</h4><p>All students drill in lines with count-based repetitions.</p></div></div>
+            <div class="step"><span class="snum">4</span><div><h4>Personal Correction</h4><p>Master walks the floor and gives targeted individual feedback.</p></div></div>
+            <div class="step"><span class="snum">5</span><div><h4>Reflect & Improve</h4><p>Students state one win and one goal for next session.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 3. MATCH PREPARATION ═══════════ -->
+<section class="sec fu">
+    <div class="eyebrow">Match Preparation</div>
+    <h2 class="sec-title">How Beginners Get <span class="gold">Ready for Matches</span></h2>
+    <p class="sec-sub">No beginner is rushed into competition. The master follows a clear 4-step path to build confidence safely before any real match.</p>
+
+    <div class="timeline">
+        <div class="t-item">
+            <div class="t-dot"></div>
+            <div class="t-phase">Step 1 — Weeks 1–3</div>
+            <h3>Taekwondo Sparring Practice</h3>
+            <p>Light controlled sparring inside the taekwondo with full protective gear (helmet, chest guard, gloves, shin pads). Master referees every round personally.</p>
+        </div>
+        <div class="t-item">
+            <div class="t-dot"></div>
+            <div class="t-phase">Step 2 — Weeks 4–5</div>
+            <h3>Friendly Matches with Partner Academies</h3>
+            <p>Informal non-graded matches at partner taekwondos. Beginners experience real match atmosphere — a floor, a judge, a clock — for the first time, without pressure.</p>
+        </div>
+        <div class="t-item">
+            <div class="t-dot"></div>
+            <div class="t-phase">Step 3 — Week 6–7</div>
+            <h3>Strategy & Video Review</h3>
+            <p>The master reviews each student's sparring on video and gives a personal match plan — scoring zones, preferred combinations, and defensive priorities.</p>
+        </div>
+        <div class="t-item">
+            <div class="t-dot"></div>
+            <div class="t-phase">Step 4 — Week 8</div>
+            <h3>Official Beginner Tournament</h3>
+            <p>Students compete in a regional beginner-category tournament. The master coaches cageside. Win or lose, every performance is reviewed and celebrated — then grading for Yellow Belt follows.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 4. THREE PILLARS ═══════════ -->
+<section class="sec fu">
+    <div class="eyebrow">Core Values</div>
+    <h2 class="sec-title">Respect · Discipline · <span class="accent">Focus</span></h2>
+    <p class="sec-sub">These three values are taught alongside every technique — they are what separate a martial artist from someone who just knows how to kick.</p>
+
+    <div class="pillars">
+
+        <div class="pillar r">
+            <div class="pglow"></div>
+            <span class="picon">🙏</span>
+            <h3>RESPECT</h3>
+            <p>Taught before a single kick. Bowing to the taekwondo, the master, and training partners is a daily practice of honouring effort and humanity.</p>
+            <ul class="plist">
+                <li>Bow in and out of the taekwondo every session</li>
+                <li>Address the master as <em>Sabeomnim</em></li>
+                <li>Respect opponents before and after every match</li>
+                <li>Carry respect into daily life outside the taekwondo</li>
+            </ul>
+        </div>
+
+        <div class="pillar d">
+            <div class="pglow"></div>
+            <span class="picon">⚔️</span>
+            <h3>DISCIPLINE</h3>
+            <p>Built through daily structure — arriving on time, clean uniform, and thousands of deliberate repetitions. Champions are made in discomfort.</p>
+            <ul class="plist">
+                <li>Never be late to class — no exceptions</li>
+                <li>Dobok (uniform) clean and pressed daily</li>
+                <li>Silence during instruction and drills</li>
+                <li>30 min home practice every day for grading</li>
+            </ul>
+        </div>
+
+        <div class="pillar f">
+            <div class="pglow"></div>
+            <span class="picon">🎯</span>
+            <h3>FOCUS</h3>
+            <p>Trained like a muscle. Stillness drills, breathing exercises, and a phone-free taekwondo teach students to direct 100% attention to what matters.</p>
+            <ul class="plist">
+                <li>Breathing drill (Kibop) opens every session</li>
+                <li>30-second stillness stand before heavy drills</li>
+                <li>Precision over power — target-point striking</li>
+                <li>Phone-free taekwondo rule — full presence always</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section class="cta fu">
+    <h2>Ready to Start Your <span class="accent">Journey?</span></h2>
+    <p>Join the Sesa Foundation taekwondo. Your first lesson is waiting.</p>
+    <a href="index.html#join" class="btn">Enrol Now</a>
+    <a href="index.html" class="btn-o">Back to Home</a>
+</section>
+
+<footer>
+    <p>© 2026 Sesa Foundation. All rights reserved. &nbsp;|&nbsp; Respect · Discipline · Focus</p>
+</footer>
+
+<script>
+    const els = document.querySelectorAll('.fu');
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    els.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

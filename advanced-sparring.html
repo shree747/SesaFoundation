@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Sparring | Sesa Foundation</title>
+    <meta name="description" content="Sesa Foundation Advanced Sparring Program — Olympic-style contact training, defensive tactics, competition strategy, and elite fighter development.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0d0d;
+            --crimson: #ff003c;
+            --gold: #ffd700;
+            --blue: #4f8ef7;
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --glass-bg: rgba(255,255,255,0.04);
+            --glass-border: rgba(255,255,255,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-main); overflow-x: hidden; }
+        h1,h2,h3,h4 { font-family: 'Outfit', sans-serif; }
+        .accent { color: var(--crimson); }
+        .gold   { color: var(--gold); }
+        .blue   { color: var(--blue); }
+
+        /* NAV */
+        .navbar {
+            position: fixed; top: 0; width: 100%;
+            padding: 1.2rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 200;
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(13,13,13,0.85);
+        }
+        .logo { font-size: 1.4rem; font-weight: 900; letter-spacing: 2px; text-decoration: none; color: var(--text-main); }
+        .logo span { color: var(--crimson); }
+        .back-btn {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: transparent; border: 1px solid var(--glass-border);
+            color: var(--text-main); padding: 0.6rem 1.4rem; border-radius: 8px;
+            cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.9rem;
+            letter-spacing: 1px; text-decoration: none; transition: all 0.3s;
+        }
+        .back-btn:hover { border-color: var(--crimson); color: var(--crimson); box-shadow: 0 0 12px rgba(255,0,60,0.3); }
+        .back-btn svg { width: 16px; height: 16px; }
+
+        /* HERO */
+        .hero {
+            margin-top: 72px; position: relative; width: 100%; height: 75vh; overflow: hidden;
+        }
+        .hero img {
+            width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+            display: block; transition: transform 8s ease;
+        }
+        .hero:hover img { transform: scale(1.04); }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(13,13,13,0.15) 0%, rgba(13,13,13,0.97) 100%);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 4rem 7%;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--crimson); color: #fff; font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            padding: 0.4rem 1rem; border-radius: 50px; margin-bottom: 1.2rem; width: fit-content;
+        }
+        .hero-title { font-size: clamp(2.5rem,6vw,5rem); font-weight: 900; line-height: 1.05; letter-spacing: -1px; margin-bottom: 1rem; }
+        .hero-subtitle { font-size: 1.15rem; color: var(--text-muted); max-width: 620px; line-height: 1.7; }
+        .hero-stats { display: flex; gap: 2.5rem; margin-top: 2.2rem; flex-wrap: wrap; }
+        .hero-stat { display: flex; flex-direction: column; }
+        .hero-stat span { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800; color: var(--gold); }
+        .hero-stat small { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+
+        /* SECTIONS */
+        .sec { padding: 4.5rem 7%; border-bottom: 1px solid var(--glass-border); }
+        .sec:nth-child(even) { background: #111; }
+        .eyebrow {
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--crimson); margin-bottom: 0.6rem;
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+        .eyebrow::before { content:''; display:block; width:24px; height:2px; background:var(--crimson); }
+        .sec-title { font-size: clamp(1.6rem,3.5vw,2.4rem); font-weight: 800; margin-bottom: 0.8rem; line-height: 1.15; }
+        .sec-sub { color: var(--text-muted); font-size: 1rem; line-height: 1.75; max-width: 700px; margin-bottom: 2.5rem; }
+
+        /* CARDS */
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1.2rem; }
+        .card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 14px; padding: 1.6rem 1.8rem;
+            position: relative; overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card::after {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background: linear-gradient(90deg,var(--crimson),var(--gold));
+            transform: scaleX(0); transform-origin: left; transition: transform 0.35s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+        .card:hover::after { transform: scaleX(1); }
+        .card-icon { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
+        .card h3 { font-size: 1.05rem; color: var(--gold); margin-bottom: 0.4rem; }
+        .card p  { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+
+        /* TIMELINE */
+        .timeline { position: relative; padding-left: 2.2rem; }
+        .timeline::before {
+            content:''; position:absolute; left:8px; top:0; bottom:0; width:2px;
+            background: linear-gradient(to bottom,var(--crimson),var(--gold),transparent);
+        }
+        .t-item { position:relative; margin-bottom: 2rem; padding-left: 1.2rem; }
+        .t-dot {
+            position:absolute; left:-2.2rem; top:5px;
+            width:16px; height:16px; border-radius:50%;
+            background:var(--bg-dark); border:2px solid var(--crimson);
+            box-shadow:0 0 8px rgba(255,0,60,0.5); transition:background 0.3s;
+        }
+        .t-item:hover .t-dot { background: var(--crimson); }
+        .t-phase { font-size:0.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--crimson); margin-bottom:0.3rem; }
+        .t-item h3 { font-size:1.1rem; margin-bottom:0.35rem; }
+        .t-item p  { font-size:0.88rem; color:var(--text-muted); line-height:1.65; }
+
+        /* PILLARS */
+        .pillars { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+        .pillar {
+            border-radius:16px; padding:2.2rem 1.8rem; text-align:center;
+            border:1px solid var(--glass-border); position:relative; overflow:hidden;
+            transition: transform 0.35s, box-shadow 0.35s;
+        }
+        .pillar:hover { transform:translateY(-6px); box-shadow:0 20px 50px rgba(0,0,0,0.45); }
+        .pillar.p1 { background:linear-gradient(145deg,rgba(255,0,60,0.11),rgba(13,13,13,0.95)); }
+        .pillar.p2 { background:linear-gradient(145deg,rgba(79,142,247,0.11),rgba(13,13,13,0.95)); }
+        .pillar.p3 { background:linear-gradient(145deg,rgba(255,215,0,0.09),rgba(13,13,13,0.95)); }
+        .pglow {
+            position:absolute; top:-50px; left:50%; transform:translateX(-50%);
+            width:180px; height:180px; border-radius:50%; filter:blur(55px); opacity:0.18;
+        }
+        .p1 .pglow { background:var(--crimson); }
+        .p2 .pglow { background:var(--blue); }
+        .p3 .pglow { background:var(--gold); }
+        .picon { font-size:3rem; display:block; margin-bottom:1rem; position:relative; z-index:1; }
+        .pillar h3 { font-size:1.4rem; font-weight:800; letter-spacing:1px; margin-bottom:0.6rem; position:relative; z-index:1; }
+        .p1 h3 { color:var(--crimson); }
+        .p2 h3 { color:var(--blue); }
+        .p3 h3 { color:var(--gold); }
+        .pillar p  { font-size:0.88rem; color:var(--text-muted); line-height:1.7; position:relative; z-index:1; }
+        .plist { list-style:none; margin-top:1rem; text-align:left; position:relative; z-index:1; }
+        .plist li {
+            padding:0.4rem 0; font-size:0.84rem; color:var(--text-muted);
+            border-bottom:1px solid rgba(255,255,255,0.05);
+            display:flex; align-items:center; gap:0.5rem;
+        }
+        .plist li::before { content:'▸'; font-size:0.65rem; }
+        .p1 .plist li::before { color:var(--crimson); }
+        .p2 .plist li::before { color:var(--blue); }
+        .p3 .plist li::before { color:var(--gold); }
+
+        /* QUOTE */
+        .quote {
+            border-left: 4px solid var(--crimson); padding: 1.2rem 2rem;
+            background: rgba(255,0,60,0.06); border-radius: 0 10px 10px 0;
+            margin: 2rem 0; font-size: 1.1rem; font-style: italic; line-height: 1.7;
+        }
+        .quote cite { display:block; margin-top:0.6rem; font-style:normal; font-size:0.82rem; color:var(--text-muted); }
+
+        /* STEPS */
+        .steps { display:flex; flex-direction:column; gap:0.7rem; }
+        .step {
+            display:flex; align-items:center; gap:1rem;
+            background:var(--glass-bg); border:1px solid var(--glass-border);
+            border-radius:10px; padding:1rem 1.4rem; transition:background 0.3s;
+        }
+        .step:hover { background:rgba(255,0,60,0.07); }
+        .snum { font-family:'Outfit',sans-serif; font-size:1.6rem; font-weight:900; color:var(--crimson); min-width:36px; }
+        .step h4 { font-size:0.95rem; margin-bottom:0.15rem; }
+        .step p  { font-size:0.82rem; color:var(--text-muted); }
+
+        /* TWO COL */
+        .two { display:grid; grid-template-columns:1fr 1fr; gap:3.5rem; align-items:start; }
+        .two-text p { color:var(--text-muted); line-height:1.8; font-size:0.95rem; margin-bottom:0.8rem; }
+
+        /* CTA */
+        .cta {
+            padding:4.5rem 7%; text-align:center;
+            background:linear-gradient(135deg,rgba(255,0,60,0.08),rgba(79,142,247,0.06));
+            border-top:1px solid var(--glass-border);
+        }
+        .cta h2 { font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:0.8rem; }
+        .cta p  { color:var(--text-muted); margin-bottom:2rem; font-size:1rem; }
+        .btn {
+            display:inline-block; background:var(--crimson); color:#fff;
+            padding:0.9rem 2.4rem; border-radius:8px; text-decoration:none;
+            font-weight:700; border:1px solid transparent; transition:all 0.3s;
+            font-family:'Outfit',sans-serif; letter-spacing:1px; text-transform:uppercase; font-size:0.95rem;
+        }
+        .btn:hover { background:transparent; border-color:var(--crimson); color:var(--crimson); box-shadow:0 0 18px rgba(255,0,60,0.35); }
+        .btn-o {
+            display:inline-block; background:transparent; color:var(--text-main);
+            padding:0.9rem 2rem; border-radius:8px; text-decoration:none;
+            font-weight:600; border:1px solid var(--glass-border); transition:all 0.3s;
+            font-family:'Outfit',sans-serif; letter-spacing:1px; margin-left:0.8rem;
+        }
+        .btn-o:hover { border-color:var(--gold); color:var(--gold); }
+
+        footer { text-align:center; padding:1.8rem; border-top:1px solid var(--glass-border); background:#080808; color:var(--text-muted); font-size:0.82rem; }
+
+        /* FADE */
+        .fu { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease,transform 0.6s ease; }
+        .fu.on { opacity:1; transform:translateY(0); }
+
+        @media(max-width:900px){ .pillars{grid-template-columns:1fr;} .two{grid-template-columns:1fr;gap:2rem;} }
+        @media(max-width:600px){ .hero{height:55vh;} .hero-overlay{padding:2.5rem 5%;} .sec{padding:3rem 5%;} }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+    <a href="index.html" class="logo">SESA <span>FOUNDATION</span></a>
+    <a href="index.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back to Home
+    </a>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+    <img
+      src="slide_1.png"
+      alt="Taekwondo Advanced Sparring – Sesa Foundation">
+    <div class="hero-overlay">
+        <span class="hero-badge">🥋 Sesa Foundation</span>
+        <h1 class="hero-title">Advanced <span class="accent">Sparring</span></h1>
+        <p class="hero-subtitle">
+            Olympic-style contact training that sharpens reflexes, builds match intelligence,
+            and forges elite fighters ready for any competition.
+        </p>
+        <div class="hero-stats">
+            <div class="hero-stat"><span>12+</span><small>Combat Techniques</small></div>
+            <div class="hero-stat"><span>16</span><small>Weeks Program</small></div>
+            <div class="hero-stat"><span>3</span><small>Focus Areas</small></div>
+            <div class="hero-stat"><span>1</span><small>Master Coach</small></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 1. WHAT IS TAUGHT ═══════════ -->
+<section class="sec fu">
+    <div class="eyebrow">Advanced Training Skills</div>
+    <h2 class="sec-title">What the Master Teaches at <span class="gold">Advanced Level</span></h2>
+    <p class="sec-sub">Advanced sparring goes far beyond kicks and punches. The master focuses on strategy, speed, reading opponents, and elite competition conditioning.</p>
+
+    <div class="cards">
+        <div class="card">
+            <span class="card-icon">⚡</span>
+            <h3>Speed & Explosive Power</h3>
+            <p>Plyometric drills and reaction training push students to deliver techniques 30% faster than at beginner level, using full body kinetic energy.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">🦅</span>
+            <h3>Spinning & Jump Kicks</h3>
+            <p>Spinning heel kick (<em>Dwi Huryeo Chagi</em>), jump back kick, and tornado kick — high-risk, high-scoring techniques used in Olympic competition.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">🧠</span>
+            <h3>Fight IQ & Opponent Reading</h3>
+            <p>The master trains students to study body language, identify patterns, and bait opponents into mistakes — the mental edge that wins close matches.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">🛡️</span>
+            <h3>Advanced Defence & Counters</h3>
+            <p>Slipping, stepping out, and simultaneous counter-attacks. Blocking is the last resort — evading and countering in one movement is the goal.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">🎯</span>
+            <h3>Scoring Zone Precision</h3>
+            <p>Olympic-rule scoring targets (trunk and head) are drilled with electronic gear. Students learn exactly which techniques score the most points.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">💪</span>
+            <h3>Match Conditioning</h3>
+            <p>3-round fight simulation, interval training, and footwork ladders build the endurance needed to maintain aggression and accuracy for a full match.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 2. HOW MASTER TRAINS ADVANCED ═══════════ -->
+<section class="sec fu">
+    <div class="eyebrow">Training Methodology</div>
+    <h2 class="sec-title">How the Master <span class="accent">Trains Advanced Students</span></h2>
+
+    <div class="two">
+        <div class="two-text">
+            <div class="quote">
+                "At this level, technique is assumed. I am now training your mind, your timing, and your will. These are what separate a fighter from a champion."
+                <cite>— Master, Sesa Foundation Taekwondo</cite>
+            </div>
+            <p>Advanced sessions are intense and unpredictable by design. The master introduces live sparring scenarios, random opponent switching, and video review so students can see their own blind spots.</p>
+            <p>Students train with <strong>electronic scoring vests</strong> so every technique that lands is measured objectively. This removes guesswork and drives precision.</p>
+            <p>Partner rotation is mandatory — fighters must adapt to different heights, ranges, and styles every round to develop true tournament readiness.</p>
+        </div>
+        <div class="steps">
+            <div class="step"><span class="snum">1</span><div><h4>Shadow Sparring</h4><p>Solo mirror work — visualise an opponent and execute full combinations at speed.</p></div></div>
+            <div class="step"><span class="snum">2</span><div><h4>Pad & Target Drills</h4><p>Precision striking with focus mitts held at competition scoring angles and heights.</p></div></div>
+            <div class="step"><span class="snum">3</span><div><h4>Live Sparring Rounds</h4><p>Full-contact Olympic-rule rounds with electronic gear. Coach gives inter-round feedback.</p></div></div>
+            <div class="step"><span class="snum">4</span><div><h4>Video Analysis</h4><p>Footage reviewed with the master to identify weaknesses and refine strategy.</p></div></div>
+            <div class="step"><span class="snum">5</span><div><h4>Conditioning Finish</h4><p>Every session ends with stamina and explosive power circuits to build fight endurance.</p></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 3. COMPETITION PATHWAY ═══════════ -->
+<section class="sec fu">
+    <div class="eyebrow">Competition Pathway</div>
+    <h2 class="sec-title">How the Master Gets Students to <span class="gold">High-Level Matches</span></h2>
+    <p class="sec-sub">Advanced students follow a structured 4-stage competition pathway designed to peak performance at the right moment.</p>
+
+    <div class="timeline">
+        <div class="t-item">
+            <div class="t-dot"></div>
+            <div class="t-phase">Stage 1 — Weeks 1–4</div>
+            <h3>Internal Elite Sparring</h3>
+            <p>Advanced students spar exclusively with the top fighters at Sesa Foundation. High pressure, full contact, Olympic rules — this is the baseline standard every student must reach before going external.</p>
+        </div>
+        <div class="t-item">
+            <div class="t-dot"></div>
+            <div class="t-phase">Stage 2 — Weeks 5–8</div>
+            <h3>Inter-Academy Challenge Matches</h3>
+            <p>The master arranges formal challenge matches with high-level academies in the region. These are structured bouts with a referee, scoreboard, and full gear — real match pressure without championship stakes.</p>
+        </div>
+        <div class="t-item">
+            <div class="t-dot"></div>
+            <div class="t-phase">Stage 3 — Weeks 9–12</div>
+            <h3>State & National Open Tournaments</h3>
+            <p>Students are entered into WTF-affiliated state and national open events. The master travels with the team as licensed coach, strategising between rounds and reviewing every result.</p>
+        </div>
+        <div class="t-item">
+            <div class="t-dot"></div>
+            <div class="t-phase">Stage 4 — Weeks 13–16</div>
+            <h3>Elite Grading & Black Belt Pathway</h3>
+            <p>Top performers are assessed for Dan (black belt) grading. This includes advanced form performance, breaking, and a live sparring grading round judged by external examiners.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ 4. THREE PILLARS (ADVANCED) ═══════════ -->
+<section class="sec fu">
+    <div class="eyebrow">Advanced Core Values</div>
+    <h2 class="sec-title">Power · Precision · <span class="accent">Mentality</span></h2>
+    <p class="sec-sub">At advanced level, the master focuses on three upgraded fighting virtues that go beyond the basics — these define a competitor.</p>
+
+    <div class="pillars">
+
+        <div class="pillar p1">
+            <div class="pglow"></div>
+            <span class="picon">💥</span>
+            <h3>POWER</h3>
+            <p>Not brute force — but the ability to generate maximum impact with perfect technique, timing, and hip rotation in a fraction of a second.</p>
+            <ul class="plist">
+                <li>Full body rotation on every strike</li>
+                <li>Kihap (battle cry) to maximise force transfer</li>
+                <li>Core and plyometric conditioning 3× per week</li>
+                <li>Breaking board training for power benchmarking</li>
+            </ul>
+        </div>
+
+        <div class="pillar p2">
+            <div class="pglow"></div>
+            <span class="picon">🎯</span>
+            <h3>PRECISION</h3>
+            <p>Scoring a point requires landing on a specific target in a specific way. Precision is drilled until the right technique hits the right zone every time, under pressure.</p>
+            <ul class="plist">
+                <li>Electronic hogu scoring gear in every session</li>
+                <li>Target zone drills — trunk and head scoring</li>
+                <li>Counter-attack timing within 0.5 seconds</li>
+                <li>Olympic rulebook studied and applied in drills</li>
+            </ul>
+        </div>
+
+        <div class="pillar p3">
+            <div class="pglow"></div>
+            <span class="picon">🧠</span>
+            <h3>MENTALITY</h3>
+            <p>Champions are not broken by setbacks. The master trains students to stay calm when losing, aggressive when winning, and focused no matter the score.</p>
+            <ul class="plist">
+                <li>Visualisation before every sparring session</li>
+                <li>Controlled breathing between rounds</li>
+                <li>Losing is treated as data — never an identity</li>
+                <li>Win or lose, debrief with the master always follows</li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<!-- ═══════════ CTA ═══════════ -->
+<section class="cta fu">
+    <h2>Ready to Fight at the <span class="accent">Highest Level?</span></h2>
+    <p>Advanced sparring spots are limited. Join the Sesa Foundation elite squad today.</p>
+    <a href="index.html#join" class="btn">Enrol Now</a>
+    <a href="index.html" class="btn-o">Back to Home</a>
+</section>
+
+<footer>
+    <p>© 2026 Sesa Foundation. All rights reserved. &nbsp;|&nbsp; Power · Precision · Mentality</p>
+</footer>
+
+<script>
+    const els = document.querySelectorAll('.fu');
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    els.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

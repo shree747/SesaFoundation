@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Sesa Foundation | Premium Sport-Tech</title>
+	<meta name="description"
+		content="Sesa Foundation — Elite taekwondo, athletics, and marathon events. Join the movement." />
+	<!-- Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@400;600;800;900&display=swap"
+		rel="stylesheet" />
+	<link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+	<nav class="navbar">
+		<div class="logo">SESA <span class="accent">FOUNDATION</span></div>
+		<button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" onclick="toggleMobileMenu()">
+			<span></span><span></span><span></span>
+		</button>
+		<div class="nav-collapse" id="nav-collapse">
+			<ul class="nav-links">
+				<li><a href="#hero" onclick="closeMobileMenu()">Home</a></li>
+				<li><a href="#taekwondo" onclick="closeMobileMenu()">The Taekwondo</a></li>
+				<li><a href="#marathon" onclick="closeMobileMenu()">Marathon Hub</a></li>
+			</ul>
+			<div class="nav-actions">
+				<div id="nav-user-area">
+					<!-- Filled by script.js -->
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Hero Section -->
+	<section id="hero" class="hero-section">
+		<div class="train-container">
+			<div class="train-track">
+				<div class="train-car" style="background-image: url(&quot;custom_slide.png&quot;)"></div>
+				<div class="train-car" style="background-image: url(&quot;custom_slide_2.jpg&quot;)"></div>
+				<div class="train-car" style="background-image: url(&quot;custom_slide_3.jpg&quot;)"></div>
+				<div class="train-car" style="
+							background-image: url(&quot;custom_slide_new_4.jpg&quot;);
+						"></div>
+				<!-- Duplicate for seamless loop -->
+				<div class="train-car" style="background-image: url(&quot;custom_slide.png&quot;)"></div>
+				<div class="train-car" style="background-image: url(&quot;custom_slide_2.jpg&quot;)"></div>
+				<div class="train-car" style="background-image: url(&quot;custom_slide_3.jpg&quot;)"></div>
+				<div class="train-car" style="
+							background-image: url(&quot;custom_slide_new_4.jpg&quot;);
+						"></div>
+			</div>
+		</div>
+	</section>
+
+	<!-- The Taekwondo Showcase -->
+	<section id="taekwondo">
+		<h2 class="section-title">THE TAEKWONDO SHOWCASE</h2>
+		<div class="taekwondo-grid">
+			<a href="beginner-curriculum.html" class="taekwondo-card glass-card"
+				style="text-decoration: none; color: inherit" id="beginner-card">
+				<div class="card-img" style="
+							background-image: url(&quot;taekwondo_beginner.png&quot;);
+						"></div>
+				<div class="card-content">
+					<h3>Beginner Curriculum</h3>
+					<p>
+						Master the foundational stances, blocks, and forms (Poomsae).
+						<span style="color: #ffd700; font-size: 0.82rem">→ Learn More</span>
+					</p>
+				</div>
+			</a>
+			<a href="advanced-sparring.html" class="taekwondo-card glass-card" style="text-decoration: none; color: inherit"
+				id="advanced-card">
+				<div class="card-img" style="background-image: url(&quot;slide_1.png&quot;)"></div>
+				<div class="card-content">
+					<h3>Advanced Sparring</h3>
+					<p>
+						Olympic-style contact training and modern defensive tactics.
+						<span style="color: #ffd700; font-size: 0.82rem">→ Learn More</span>
+					</p>
+				</div>
+			</a>
+			<a href="leadership-program.html" class="taekwondo-card glass-card" style="text-decoration: none; color: inherit"
+				id="leadership-card">
+				<div class="card-img" style="background-image: url(&quot;image.png&quot;)"></div>
+				<div class="card-content">
+					<h3>Leadership Program</h3>
+					<p>
+						Elite black belt mentorship and community leadership.
+						<span style="color: #ffd700; font-size: 0.82rem">→ Learn More</span>
+					</p>
+				</div>
+			</a>
+		</div>
+	</section>
+
+	<!-- Marathon Hub -->
+	<section id="marathon">
+		<div class="marathon-bg parallax"></div>
+		<div class="marathon-container">
+			<div class="glass-card countdown-card">
+				<h2 id="countdown-label">NEXT RACE STARTING IN</h2>
+				<div class="timer">
+					<div class="time-block">
+						<span id="days">00</span><small>Days</small>
+					</div>
+					<div class="time-block">
+						<span id="hours">00</span><small>Hours</small>
+					</div>
+					<div class="time-block">
+						<span id="mins">00</span><small>Mins</small>
+					</div>
+					<div class="time-block">
+						<span id="secs">00</span><small>Secs</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="glass-card register-card">
+				<h3 id="marathon-event-name">Sesa Cup Marathon 2026</h3>
+				<p id="marathon-event-desc">Register today and secure your starting position.</p>
+				<div id="marathon-event-meta" style="margin-bottom:1.2rem;display:none">
+					<div style="display:flex;gap:1rem;flex-wrap:wrap;font-size:0.82rem;color:#aaa;margin-bottom:0.6rem">
+						<span id="meta-location"></span>
+						<span id="meta-distance"></span>
+						<span id="meta-fee"></span>
+					</div>
+				</div>
+				<button class="btn-primary" id="register-btn" style="width:100%"
+					onclick="handleRegisterClick()">Register Now</button>
+			</div>
+		</div>
+	</section>
+
+	<!-- Lead Generation Form -->
+	<section id="join">
+		<div class="glass-card join-card sticky-form">
+			<h2>JOIN THE <span class="accent">FOUNDATION</span></h2>
+			<form id="contact-form">
+				<div class="input-group">
+					<input type="text" id="name" required placeholder="Full Name" />
+				</div>
+				<div class="input-group">
+					<input type="email" id="email" required placeholder="Email Address" />
+				</div>
+				<div class="input-group">
+					<select id="interest" required>
+						<option value="" disabled selected>Primary Interest</option>
+						<option value="taekwondo">Taekwondo</option>
+						<option value="marathon">Athletics / Marathon</option>
+						<option value="both">Both</option>
+					</select>
+				</div>
+				<button type="submit" class="btn-primary">Begin Journey</button>
+			</form>
+		</div>
+	</section>
+
+	<footer>
+		<p>&copy; 2026 Sesa Foundation. All rights reserved.</p>
+	</footer>
+
+	<!-- Hamburger Menu Script -->
+	<script>
+	function toggleMobileMenu() {
+		const nav = document.getElementById('nav-collapse');
+		const btn = document.getElementById('hamburger-btn');
+		nav.classList.toggle('open');
+		btn.classList.toggle('active');
+	}
+	function closeMobileMenu() {
+		const nav = document.getElementById('nav-collapse');
+		const btn = document.getElementById('hamburger-btn');
+		nav.classList.remove('open');
+		btn.classList.remove('active');
+	}
+	</script>
+
+	<!-- Supabase SDK -->
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	<script src="supabase-config.js"></script>
+	<script src="script.js"></script>
+</body>
+
+</html>
